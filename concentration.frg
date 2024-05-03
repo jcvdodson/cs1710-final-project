@@ -17,6 +17,12 @@ sig SemesterSchedule {
     semCourses: set Course
 }
 
+abstract sig coursesUsed {
+    foundationCourses: set Course
+}
+
+one sig usedCourses extends coursesUsed {}
+
 one sig cs0111 extends Course {}
 one sig cs0112 extends Course {}
 one sig cs0150 extends Course {}
@@ -46,6 +52,9 @@ one sig apma1650 extends Course {}
 one sig apma1655 extends Course {}
 one sig math0520 extends Course {}
 one sig math0540 extends Course {}
+one sig math0100 extends Course {}
+one sig math0180 extends Course {}
+one sig math0200 extends Course {}
 
 one sig cs0200Pre extends Prerequisite {}
 one sig cs0300Pre extends Prerequisite {}
@@ -97,22 +106,31 @@ pred establishPrerequisites {
 }
 
 pred hasAlgoTheoryCourse {
-    some semSched: SemesterSchedule | 
+    some semSched: SemesterSchedule | {
         (cs0500 in semSched.semCourses or cs1010 in semSched.semCourses or cs1550 in semSched.semCourses or cs1570 in semSched.semCourses)
+    
+        cs0500 in semSched.semCourses => cs0500 in usedCourses.foundationCourses
+        cs1010 in semSched.semCourses => cs1010 in usedCourses.foundationCourses
+        cs1550 in semSched.semCourses => cs1550 in usedCourses.foundationCourses
+        cs1570 in semSched.semCourses => cs1570 in usedCourses.foundationCourses
+    }
 }
 
 pred hasAICourse {
-    some semSched: SemesterSchedule | 
+    some semSched: SemesterSchedule | {
         (cs0410 in semSched.semCourses or cs1410 in semSched.semCourses or cs1411 in semSched.semCourses or cs1420 in semSched.semCourses or cs1430 in semSched.semCourses or cs1460 in semSched.semCourses or cs1470 in semSched.semCourses or cs1951A in semSched.semCourses or cs1952Q in semSched.semCourses)
+    }
 }
 
-pred hasSystemsCourse {
-    some semSched: SemesterSchedule | 
-        (cs0300 in semSched.semCourses or cs0320 in semSched.semCourses or cs0330 in semSched.semCourses)
+pred hasSystemsCourse[isAB: Int] {
+    some semSched: SemesterSchedule | {
+        (cs0300 in semSched.semCourses or cs0330 in semSched.semCourses)
+        or (cs0320 in semSched.semCourses and isAB = 1)
+    }
 }
 
-pred fulfillsIntermediateRequirements {
-    hasSystemsCourse
+pred fulfillsIntermediateRequirements[isAB: Int] {
+    hasSystemsCourse[isAB]
 }
 
 pred fifteenTwentyIntroSequence {
@@ -181,14 +199,25 @@ pred noEquivalentTaken {
             {some equivalentCourse: course.equivalentCourses | equivalentCourse in semSched2.semCourses}}
 }
 
-// pred 1120IntroSequence {
-//     some semSched: SemesterSchedule | {
-//         cs0111 in semSched.semCourses and some laterSemSchedule: SemesterSchedule | {
-//             cs0200 in laterSemSchedule.semCourses
-//             laterSemSchedule.semNumber > semSched.semNumber
-//         }
-//     }
-// }
+pred atLeastSomeThousandLevel[numThousandLevel: Int] {
+    let thousandLevelCourses = cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q {
+        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses} >= numThousandLevel
+    }
+
+    // how to validate the Cannot overlap any 1000-level courses used to satisfy Foundations requirements. part?
+}
+
+pred someAdditionalCourses[numAdditional: Int] {
+    let additionalCourses = cs0320 + cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540 {
+        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses} >= numAdditional
+    }
+}
+
+pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
+    {some semSched: SemesterSchedule | 
+        (math0100 in semSched.semCourses and math0180 in semSched.semCourses and math0200 in semSched.semCourses)}
+    or isAB = 1 or hasHSCredit = 1
+}
 
 pred validSemesterSchedule {
     // can't have a semester number less than 0 or greater than 7
@@ -204,12 +233,21 @@ pred validSemesterSchedule {
     no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
 }
 
+pred init {
+    all sem: SemesterSchedule | sem.semCourses = none
+    usedCourses.foundationCourses = none
+}
+
 
 run {
+    init
     establishPrerequisites
+    fulfillsCalcRequirement[0, 0] // 0 for ScB, 1 for AB; second arg is 0 if no HS credit, 1 if HS credit
     fulfillsIntroSequence
-    fulfillsIntermediateRequirements
+    fulfillsIntermediateRequirements[0] // 0 for ScB, 1 for AB
     fulfillsAllCoursePrereqs
+    someAdditionalCourses[4] // 4 for ScB, 2 for AB
+    atLeastSomeThousandLevel[5] // 5 for ScB, 2 for AB
     validSemesterSchedule
     noEquivalentTaken
 } for exactly 5 SemesterSchedule
