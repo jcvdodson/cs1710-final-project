@@ -23,51 +23,6 @@ abstract sig coursesUsed {
 
 one sig usedCourses extends coursesUsed {}
 
-abstract sig capstoneCourse extends Course {}
-one sig cs1230 extends capstoneCourse {}
-one sig cs1234 extends capstoneCourse {}
-one sig cs1260 extends capstoneCourse {}
-one sig cs1290 extends capstoneCourse {}
-one sig cs1300 extends capstoneCourse {}
-one sig cs1320 extends capstoneCourse {}
-one sig cs1370 extends capstoneCourse {}
-one sig cs1380 extends capstoneCourse {}
-one sig cs1410 extends capstoneCourse {}
-one sig cs1420 extends capstoneCourse {}
-one sig cs1430 extends capstoneCourse {}
-one sig cs1440 extends capstoneCourse {}
-one sig cs1470 extends capstoneCourse {}
-one sig cs1515 extends capstoneCourse {}
-one sig cs1600 extends capstoneCourse {}
-one sig cs1660 extends capstoneCourse {}
-one sig cs1620 extends capstoneCourse {}
-one sig cs1670 extends capstoneCourse {}
-one sig cs1690 extends capstoneCourse {}
-one sig cs1680 extends capstoneCourse {}
-one sig cs1710 extends capstoneCourse {}
-one sig cs1730 extends capstoneCourse {}
-one sig cs1760 extends capstoneCourse {}
-one sig cs1950U extends capstoneCourse {}
-one sig cs1951A extends capstoneCourse {}
-one sig cs1951C extends capstoneCourse {}
-one sig cs1951I extends capstoneCourse {}
-one sig cs1951U extends capstoneCourse {}
-one sig cs1952B extends capstoneCourse {}
-one sig cs1970 extends capstoneCourse {}
-one sig cs2240 extends capstoneCourse {}
-one sig cs2370 extends capstoneCourse {}
-one sig cs2390 extends capstoneCourse {}
-one sig cs2420 extends capstoneCourse {}
-one sig cs2500B extends capstoneCourse {}
-one sig cs2510 extends capstoneCourse {}
-one sig cs2950T extends capstoneCourse {}
-one sig cs2950V extends capstoneCourse {}
-one sig cs2951I extends capstoneCourse {}
-one sig cs2952K extends capstoneCourse {}
-one sig cs2952N extends capstoneCourse {}
-
-
-
 one sig cs0111 extends Course {}
 one sig cs0112 extends Course {}
 one sig cs0150 extends Course {}
@@ -265,11 +220,50 @@ pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
 }
 
 // fulling the capstone requirement means that you take one of these courses in your 7th or 8th semester
-
 pred fullfillsCapstoneRequirement {
     some semSched: SemesterSchedule | {
-        some c: capstoneCourse | c in semSched.semCourses and semSched.semNumber >= 6
-    }
+
+        semSched.semNumber = 7 or semSched.semNumber = 8
+
+        (cs1230 in semSched.semCourses and cs1234 in semSched.semCourses)
+        or cs1260 in semSched.semCourses
+        or cs1290 in semSched.semCourses
+        or cs1300 in semSched.semCourses
+        or cs1320 in semSched.semCourses
+        or cs1370 in semSched.semCourses
+        or cs1380 in semSched.semCourses
+        or cs1410 in semSched.semCourses
+        or cs1420 in semSched.semCourses
+        or cs1430 in semSched.semCourses
+        or cs1440 in semSched.semCourses
+        or cs1470 in semSched.semCourses
+        or cs1515 in semSched.semCourses
+        or cs1600 in semSched.semCourses
+        or (cs1660 in semSched.semCourses and cs1620 in semSched.semCourses)
+        or (cs1670 in semSched.semCourses and cs1690 in semSched.semCourses)
+        or cs1680 in semSched.semCourses
+        or cs1710 in semSched.semCourses
+        or cs1730 in semSched.semCourses
+        or cs1760 in semSched.semCourses
+        or cs1950U in semSched.semCourses
+        or cs1951A in semSched.semCourses
+        or cs1951C in semSched.semCourses
+        or cs1951I in semSched.semCourses
+        or cs1951U in semSched.semCourses
+        or cs1952B in semSched.semCourses
+        or cs1970 in semSched.semCourses
+        or cs2240 in semSched.semCourses
+        or cs2370 in semSched.semCourses
+        or cs2390 in semSched.semCourses
+        or cs2420 in semSched.semCourses
+        or cs2500B in semSched.semCourses
+        or cs2510 in semSched.semCourses
+        or cs2950T in semSched.semCourses
+        or cs2950V in semSched.semCourses
+        or cs2951I in semSched.semCourses
+        or cs2952K in semSched.semCourses
+        or cs2952N in semSched.semCourses
+    } 
 }
 
 pred validSemesterSchedule {
