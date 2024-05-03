@@ -55,6 +55,44 @@ one sig math0540 extends Course {}
 one sig math0100 extends Course {}
 one sig math0180 extends Course {}
 one sig math0200 extends Course {}
+// capstone courses
+one sig cs1230 extends Course {}
+one sig cs1234 extends Course {}
+one sig cs1260 extends Course {}
+one sig cs1290 extends Course {}
+one sig cs1300 extends Course {}
+one sig cs1320 extends Course {}
+one sig cs1370 extends Course {}
+one sig cs1380 extends Course {}
+one sig cs1440 extends Course {}
+one sig cs1515 extends Course {}
+one sig cs1600 extends Course {}
+one sig cs1660 extends Course {}
+one sig cs1620 extends Course {}
+one sig cs1670 extends Course {}
+one sig cs1690 extends Course {}
+one sig cs1680 extends Course {}
+one sig cs1710 extends Course {}
+one sig cs1730 extends Course {}
+one sig cs1760 extends Course {}
+one sig cs1950U extends Course {}
+one sig cs1951C extends Course {}
+one sig cs1951I extends Course {}
+one sig cs1951U extends Course {}
+one sig cs1952B extends Course {}
+one sig cs1970 extends Course {}
+one sig cs2240 extends Course {}
+one sig cs2370 extends Course {}
+one sig cs2390 extends Course {}
+one sig cs2420 extends Course {}
+one sig cs2500B extends Course {}
+one sig cs2510 extends Course {}
+one sig cs2950T extends Course {}
+one sig cs2950V extends Course {}
+one sig cs2951I extends Course {}
+one sig cs2952K extends Course {}
+one sig cs2952N extends Course {}
+
 
 one sig cs0200Pre extends Prerequisite {}
 one sig cs0300Pre extends Prerequisite {}
