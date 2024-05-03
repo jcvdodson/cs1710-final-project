@@ -109,7 +109,6 @@ pred hasAlgoTheoryCourse {
     some semSched: SemesterSchedule | {
         (cs0500 in semSched.semCourses or cs1010 in semSched.semCourses or cs1550 in semSched.semCourses or cs1570 in semSched.semCourses)
     
-        cs0500 in semSched.semCourses => cs0500 in usedCourses.foundationCourses
         cs1010 in semSched.semCourses => cs1010 in usedCourses.foundationCourses
         cs1550 in semSched.semCourses => cs1550 in usedCourses.foundationCourses
         cs1570 in semSched.semCourses => cs1570 in usedCourses.foundationCourses
@@ -119,6 +118,15 @@ pred hasAlgoTheoryCourse {
 pred hasAICourse {
     some semSched: SemesterSchedule | {
         (cs0410 in semSched.semCourses or cs1410 in semSched.semCourses or cs1411 in semSched.semCourses or cs1420 in semSched.semCourses or cs1430 in semSched.semCourses or cs1460 in semSched.semCourses or cs1470 in semSched.semCourses or cs1951A in semSched.semCourses or cs1952Q in semSched.semCourses)
+
+        cs1410 in semSched.semCourses => cs1410 in usedCourses.foundationCourses
+        cs1411 in semSched.semCourses => cs1411 in usedCourses.foundationCourses
+        cs1420 in semSched.semCourses => cs1420 in usedCourses.foundationCourses
+        cs1430 in semSched.semCourses => cs1430 in usedCourses.foundationCourses
+        cs1460 in semSched.semCourses => cs1460 in usedCourses.foundationCourses
+        cs1470 in semSched.semCourses => cs1470 in usedCourses.foundationCourses
+        cs1951A in semSched.semCourses => cs1951A in usedCourses.foundationCourses
+        cs1952Q in semSched.semCourses => cs1952Q in usedCourses.foundationCourses
     }
 }
 
@@ -126,6 +134,10 @@ pred hasSystemsCourse[isAB: Int] {
     some semSched: SemesterSchedule | {
         (cs0300 in semSched.semCourses or cs0330 in semSched.semCourses)
         or (cs0320 in semSched.semCourses and isAB = 1)
+
+        cs0300 in semSched.semCourses => cs0300 in usedCourses.foundationCourses
+        cs0330 in semSched.semCourses => cs0330 in usedCourses.foundationCourses
+        cs0320 in semSched.semCourses => cs0320 in usedCourses.foundationCourses
     }
 }
 
@@ -201,15 +213,13 @@ pred noEquivalentTaken {
 
 pred atLeastSomeThousandLevel[numThousandLevel: Int] {
     let thousandLevelCourses = cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q {
-        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses} >= numThousandLevel
+        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses and course not in usedCourses.foundationCourses} >= numThousandLevel
     }
-
-    // how to validate the Cannot overlap any 1000-level courses used to satisfy Foundations requirements. part?
 }
 
 pred someAdditionalCourses[numAdditional: Int] {
     let additionalCourses = cs0320 + cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540 {
-        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses} >= numAdditional
+        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses and course not in usedCourses.foundationCourses} >= numAdditional
     }
 }
 
@@ -233,21 +243,29 @@ pred validSemesterSchedule {
     no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
 }
 
-pred init {
-    all sem: SemesterSchedule | sem.semCourses = none
-    usedCourses.foundationCourses = none
-}
-
-
 run {
-    init
     establishPrerequisites
     fulfillsCalcRequirement[0, 0] // 0 for ScB, 1 for AB; second arg is 0 if no HS credit, 1 if HS credit
     fulfillsIntroSequence
     fulfillsIntermediateRequirements[0] // 0 for ScB, 1 for AB
-    fulfillsAllCoursePrereqs
     someAdditionalCourses[4] // 4 for ScB, 2 for AB
     atLeastSomeThousandLevel[5] // 5 for ScB, 2 for AB
+    fulfillsAllCoursePrereqs
     validSemesterSchedule
     noEquivalentTaken
-} for exactly 5 SemesterSchedule
+} for exactly 7 SemesterSchedule
+
+
+/* TESTING:
+
+- for examples, we can write examples, but since they can be very long/involved, we don't need many examples
+- more focus on necessary/sufficient tests 
+- is it possible to graduate taking only these classes, or taking some set of courses
+- group classes into specific pathways, and write necessary/sufficient tests based on these
+- beyond just writing A + B allows us to take C
+- checking for under/over constraints
+- don't just reiterate what the model is saying
+
+Final presentation:
+- create a presentation of one possible output of the model
+*/
