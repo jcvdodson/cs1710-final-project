@@ -23,6 +23,51 @@ abstract sig coursesUsed {
 
 one sig usedCourses extends coursesUsed {}
 
+abstract sig capstoneCourse extends Course {}
+one sig cs1230 extends capstoneCourse {}
+one sig cs1234 extends capstoneCourse {}
+one sig cs1260 extends capstoneCourse {}
+one sig cs1290 extends capstoneCourse {}
+one sig cs1300 extends capstoneCourse {}
+one sig cs1320 extends capstoneCourse {}
+one sig cs1370 extends capstoneCourse {}
+one sig cs1380 extends capstoneCourse {}
+one sig cs1410 extends capstoneCourse {}
+one sig cs1420 extends capstoneCourse {}
+one sig cs1430 extends capstoneCourse {}
+one sig cs1440 extends capstoneCourse {}
+one sig cs1470 extends capstoneCourse {}
+one sig cs1515 extends capstoneCourse {}
+one sig cs1600 extends capstoneCourse {}
+one sig cs1660 extends capstoneCourse {}
+one sig cs1620 extends capstoneCourse {}
+one sig cs1670 extends capstoneCourse {}
+one sig cs1690 extends capstoneCourse {}
+one sig cs1680 extends capstoneCourse {}
+one sig cs1710 extends capstoneCourse {}
+one sig cs1730 extends capstoneCourse {}
+one sig cs1760 extends capstoneCourse {}
+one sig cs1950U extends capstoneCourse {}
+one sig cs1951A extends capstoneCourse {}
+one sig cs1951C extends capstoneCourse {}
+one sig cs1951I extends capstoneCourse {}
+one sig cs1951U extends capstoneCourse {}
+one sig cs1952B extends capstoneCourse {}
+one sig cs1970 extends capstoneCourse {}
+one sig cs2240 extends capstoneCourse {}
+one sig cs2370 extends capstoneCourse {}
+one sig cs2390 extends capstoneCourse {}
+one sig cs2420 extends capstoneCourse {}
+one sig cs2500B extends capstoneCourse {}
+one sig cs2510 extends capstoneCourse {}
+one sig cs2950T extends capstoneCourse {}
+one sig cs2950V extends capstoneCourse {}
+one sig cs2951I extends capstoneCourse {}
+one sig cs2952K extends capstoneCourse {}
+one sig cs2952N extends capstoneCourse {}
+
+
+
 one sig cs0111 extends Course {}
 one sig cs0112 extends Course {}
 one sig cs0150 extends Course {}
@@ -217,6 +262,14 @@ pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
     {some semSched: SemesterSchedule | 
         (math0100 in semSched.semCourses and math0180 in semSched.semCourses and math0200 in semSched.semCourses)}
     or isAB = 1 or hasHSCredit = 1
+}
+
+// fulling the capstone requirement means that you take one of these courses in your 7th or 8th semester
+
+pred fullfillsCapstoneRequirement {
+    some semSched: SemesterSchedule | {
+        some c: capstoneCourse | c in semSched.semCourses and semSched.semNumber >= 6
+    }
 }
 
 pred validSemesterSchedule {
