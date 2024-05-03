@@ -55,6 +55,44 @@ one sig math0540 extends Course {}
 one sig math0100 extends Course {}
 one sig math0180 extends Course {}
 one sig math0200 extends Course {}
+// capstone courses
+one sig cs1230 extends Course {}
+one sig cs1234 extends Course {}
+one sig cs1260 extends Course {}
+one sig cs1290 extends Course {}
+one sig cs1300 extends Course {}
+one sig cs1320 extends Course {}
+one sig cs1370 extends Course {}
+one sig cs1380 extends Course {}
+one sig cs1440 extends Course {}
+one sig cs1515 extends Course {}
+one sig cs1600 extends Course {}
+one sig cs1660 extends Course {}
+one sig cs1620 extends Course {}
+one sig cs1670 extends Course {}
+one sig cs1690 extends Course {}
+one sig cs1680 extends Course {}
+one sig cs1710 extends Course {}
+one sig cs1730 extends Course {}
+one sig cs1760 extends Course {}
+one sig cs1950U extends Course {}
+one sig cs1951C extends Course {}
+one sig cs1951I extends Course {}
+one sig cs1951U extends Course {}
+one sig cs1952B extends Course {}
+one sig cs1970 extends Course {}
+one sig cs2240 extends Course {}
+one sig cs2370 extends Course {}
+one sig cs2390 extends Course {}
+one sig cs2420 extends Course {}
+one sig cs2500B extends Course {}
+one sig cs2510 extends Course {}
+one sig cs2950T extends Course {}
+one sig cs2950V extends Course {}
+one sig cs2951I extends Course {}
+one sig cs2952K extends Course {}
+one sig cs2952N extends Course {}
+
 
 one sig cs0200Pre extends Prerequisite {}
 one sig cs0300Pre extends Prerequisite {}
@@ -227,6 +265,53 @@ pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
     {some semSched: SemesterSchedule | 
         (math0100 in semSched.semCourses and math0180 in semSched.semCourses and math0200 in semSched.semCourses)}
     or isAB = 1 or hasHSCredit = 1
+}
+
+// fulling the capstone requirement means that you take one of these courses in your 7th or 8th semester
+pred fullfillsCapstoneRequirement {
+    some semSched: SemesterSchedule | {
+
+        semSched.semNumber = 7 or semSched.semNumber = 8
+
+        (cs1230 in semSched.semCourses and cs1234 in semSched.semCourses)
+        or cs1260 in semSched.semCourses
+        or cs1290 in semSched.semCourses
+        or cs1300 in semSched.semCourses
+        or cs1320 in semSched.semCourses
+        or cs1370 in semSched.semCourses
+        or cs1380 in semSched.semCourses
+        or cs1410 in semSched.semCourses
+        or cs1420 in semSched.semCourses
+        or cs1430 in semSched.semCourses
+        or cs1440 in semSched.semCourses
+        or cs1470 in semSched.semCourses
+        or cs1515 in semSched.semCourses
+        or cs1600 in semSched.semCourses
+        or (cs1660 in semSched.semCourses and cs1620 in semSched.semCourses)
+        or (cs1670 in semSched.semCourses and cs1690 in semSched.semCourses)
+        or cs1680 in semSched.semCourses
+        or cs1710 in semSched.semCourses
+        or cs1730 in semSched.semCourses
+        or cs1760 in semSched.semCourses
+        or cs1950U in semSched.semCourses
+        or cs1951A in semSched.semCourses
+        or cs1951C in semSched.semCourses
+        or cs1951I in semSched.semCourses
+        or cs1951U in semSched.semCourses
+        or cs1952B in semSched.semCourses
+        or cs1970 in semSched.semCourses
+        or cs2240 in semSched.semCourses
+        or cs2370 in semSched.semCourses
+        or cs2390 in semSched.semCourses
+        or cs2420 in semSched.semCourses
+        or cs2500B in semSched.semCourses
+        or cs2510 in semSched.semCourses
+        or cs2950T in semSched.semCourses
+        or cs2950V in semSched.semCourses
+        or cs2951I in semSched.semCourses
+        or cs2952K in semSched.semCourses
+        or cs2952N in semSched.semCourses
+    } 
 }
 
 pred validSemesterSchedule {
