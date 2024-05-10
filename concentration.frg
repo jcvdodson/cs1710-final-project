@@ -16,11 +16,19 @@ sig SemesterSchedule {
     semCourses: set Course
 }
 
-abstract sig coursesUsed {
-    foundationCourses: set Course
+abstract sig coursesSet {
+    setCourses: set Course
 }
 
-one sig usedCourses extends coursesUsed {}
+one sig foundationCourses extends coursesSet {}
+one sig fallCourses extends coursesSet {}
+one sig springCourses extends coursesSet {}
+one sig capstoneCourses extends coursesSet {}
+one sig AICourses extends coursesSet {}
+one sig algoTheoryCourses extends coursesSet {}
+one sig calcCourses extends coursesSet {}
+one sig thousandLevelCourses extends coursesSet {}
+one sig additionalCourses extends coursesSet {}
 
 one sig cs0111 extends Course {}
 one sig cs0112 extends Course {}
@@ -28,70 +36,34 @@ one sig cs0150 extends Course {}
 one sig cs0170 extends Course {}
 one sig cs0190 extends Course {}
 one sig cs0200 extends Course {}
+one sig cs0220 extends Course {}
 one sig cs0300 extends Course {}
 one sig cs0320 extends Course {}
 one sig cs0330 extends Course {}
 one sig cs0410 extends Course {}
 one sig cs0500 extends Course {}
-one sig cs0530 extends Course {}
 one sig cs1010 extends Course {}
-one sig cs1120 extends Course {}
+one sig cs1260 extends Course {}
+one sig cs1300 extends Course {}
+one sig cs1380 extends Course {}
 one sig cs1410 extends Course {}
-one sig cs1411 extends Course {}
 one sig cs1420 extends Course {}
 one sig cs1430 extends Course {}
 one sig cs1460 extends Course {}
 one sig cs1470 extends Course {}
 one sig cs1550 extends Course {}
 one sig cs1570 extends Course {}
+one sig cs1670 extends Course {}
+one sig cs1680 extends Course {}
 one sig cs1951A extends Course {}
 one sig cs1952Q extends Course {}
-one sig cs0220 extends Course {}
 one sig apma1650 extends Course {}
 one sig apma1655 extends Course {}
-one sig math0520 extends Course {}
-one sig math0540 extends Course {}
 one sig math0100 extends Course {}
 one sig math0180 extends Course {}
 one sig math0200 extends Course {}
-// capstone courses
-// one sig cs1230 extends Course {}
-// one sig cs1234 extends Course {}
-one sig cs1260 extends Course {}
-one sig cs1290 extends Course {}
-one sig cs1300 extends Course {}
-one sig cs1320 extends Course {}
-one sig cs1370 extends Course {}
-one sig cs1380 extends Course {}
-// one sig cs1440 extends Course {}
-// one sig cs1515 extends Course {}
-// one sig cs1600 extends Course {}
-// one sig cs1660 extends Course {}
-// one sig cs1620 extends Course {}
-// one sig cs1670 extends Course {}
-// one sig cs1690 extends Course {}
-// one sig cs1680 extends Course {}
-// one sig cs1710 extends Course {}
-// one sig cs1730 extends Course {}
-// one sig cs1760 extends Course {}
-// one sig cs1950U extends Course {}
-// one sig cs1951C extends Course {}
-// one sig cs1951I extends Course {}
-// one sig cs1951U extends Course {}
-// one sig cs1952B extends Course {}
-// one sig cs1970 extends Course {}
-// one sig cs2240 extends Course {}
-// one sig cs2370 extends Course {}
-// one sig cs2390 extends Course {}
-// one sig cs2420 extends Course {}
-// one sig cs2500B extends Course {}
-// one sig cs2510 extends Course {}
-// one sig cs2950T extends Course {}
-// one sig cs2950V extends Course {}
-// one sig cs2951I extends Course {}
-// one sig cs2952K extends Course {}
-// one sig cs2952N extends Course {}
-
+one sig math0520 extends Course {}
+one sig math0540 extends Course {}
 
 one sig cs0200Pre extends Prerequisite {}
 one sig cs0300Pre extends Prerequisite {}
@@ -102,19 +74,52 @@ one sig cs0410Pre1 extends Prerequisite {}
 one sig cs0410Pre2 extends Prerequisite {}
 one sig cs0410Pre3 extends Prerequisite {}
 
-one sig cs0500Pre extends Prerequisite {}
+one sig cs0500Pre1 extends Prerequisite {}
+one sig cs0500Pre2 extends Prerequisite {}
+one sig cs0500Pre3 extends Prerequisite {}
+one sig cs0500Pre4 extends Prerequisite {}
+one sig cs0500Pre5 extends Prerequisite {}
+
 one sig cs1010Pre extends Prerequisite {}
-one sig cs1120Pre extends Prerequisite {}
-one sig cs1410Pre extends Prerequisite {}
-one sig cs1411Pre extends Prerequisite {}
-one sig cs1420Pre extends Prerequisite {}
-one sig cs1430Pre extends Prerequisite {}
-one sig cs1460Pre extends Prerequisite {}
-one sig cs1470Pre extends Prerequisite {}
-one sig cs1550Pre extends Prerequisite {}
-one sig cs1570Pre extends Prerequisite {}
+
+one sig cs1260Pre extends Prerequisite {}
+
+one sig cs1300Pre extends Prerequisite {}
+
+one sig cs1380Pre extends Prerequisite {}
+
+one sig cs1410Pre1 extends Prerequisite {}
+one sig cs1410Pre2 extends Prerequisite {}
+
+one sig cs1420Pre1 extends Prerequisite {}
+one sig cs1420Pre2 extends Prerequisite {}
+one sig cs1420Pre3 extends Prerequisite {}
+
+one sig cs1430Pre1 extends Prerequisite {}
+one sig cs1430Pre2 extends Prerequisite {}
+
+one sig cs1470Pre1 extends Prerequisite {}
+one sig cs1470Pre2 extends Prerequisite {}
+one sig cs1470Pre3 extends Prerequisite {}
+
+one sig cs1570Pre1 extends Prerequisite {}
+one sig cs1570Pre2 extends Prerequisite {}
+
+one sig cs1670Pre extends Prerequisite {}
+
+one sig cs1680Pre extends Prerequisite {}
+
 one sig cs1951APre extends Prerequisite {}
-one sig cs1952QPre extends Prerequisite {}
+
+one sig cs1952QPre1 extends Prerequisite {}
+one sig cs1952QPre2 extends Prerequisite {}
+one sig cs1952QPre3 extends Prerequisite {}
+
+one sig apma1650Pre extends Prerequisite {}
+one sig apma1655Pre extends Prerequisite {}
+
+one sig math0180Pre extends Prerequisite {}
+one sig math0200Pre extends Prerequisite {}
 
 pred establishPrerequisites {
     cs0200Pre.courses = cs0150 + cs0170 + cs0190
@@ -124,48 +129,132 @@ pred establishPrerequisites {
     
     cs0410Pre1.courses = cs0200
     cs0410Pre2.courses = cs0220 + apma1650 + apma1655 + cs1410
-    cs0410Pre3.courses = math0520 + math0540 + cs0530
+    cs0410Pre3.courses = math0520 + math0540
+
+    cs0500Pre1.courses = cs0220
+    cs0500Pre2.courses = cs0150 + cs0200
+    cs0500Pre3.courses = cs0170 + cs0200
+    cs0500Pre4.courses = cs0111 + cs0112 + cs0200
+    cs0500Pre5.courses = cs0190 + cs0200
+
+    cs1010Pre.courses = cs0220 + cs1550 + apma1650 + apma1655 + cs1570
+
+    cs1260Pre.courses = cs0220 + cs0320 + cs0300 + cs0330
+
+    cs1300Pre.courses = cs0190 + cs0200 + cs0320
+
+    cs1380Pre.courses = cs0320 + cs0330 + cs0300
+
+    cs1410Pre1.courses = cs0190 + cs0200
+    cs1410Pre2.courses = cs0220 + apma1650 + apma1655
+
+    cs1420Pre1.courses = cs0190 + cs0200
+    cs1420Pre2.courses = apma1650 + apma1655
+    cs1420Pre3.courses = math0520 + math0540
+
+    cs1430Pre1.courses = cs0190 + cs0200
+    cs1430Pre2.courses = math0520 + math0540
+
+    cs1470Pre1.courses = cs0150 + cs0170 + cs0190 + cs0200
+    cs1470Pre2.courses = math0520 + math0540
+    cs1470Pre3.courses = cs0220 + apma1650 + apma1655
+
+    cs1570Pre1.courses = cs0190 + cs0200
+    cs1570Pre2.courses = cs0220 + math0540 + math0520 + cs1010
+
+    cs1670Pre.courses = cs0300 + cs0330
+
+    cs1680Pre.courses = cs0300 + cs0330
+
+    cs1951APre.courses = cs0190 + cs0200
+
+    cs1952QPre1.courses = cs0190 + cs0200
+    cs1952QPre2.courses = apma1650 + apma1655
+    cs1952QPre3.courses = math0520 + math0540
+
+    apma1650Pre.courses = math0100 + math0180 + math0200
+    apma1655Pre.courses = math0180 + math0200
+
+    math0180Pre.courses = math0100
+    math0200Pre.courses = math0100
 
     cs0150.prerequisites = none
     cs0170.prerequisites = none
     cs0190.prerequisites = none
     cs0200.prerequisites = cs0200Pre
+    cs0220.prerequisites = none
     cs0300.prerequisites = cs0300Pre
     cs0320.prerequisites = cs0320Pre
     cs0330.prerequisites = cs0330Pre
     cs0410.prerequisites = cs0410Pre1 + cs0410Pre2 + cs0410Pre3
+    cs0500.prerequisites = cs0500Pre1 + cs0500Pre2 + cs0500Pre3 + cs0500Pre4 + cs0500Pre5
+    cs1010.prerequisites = cs1010Pre
+    cs1260.prerequisites = cs1260Pre
+    cs1300.prerequisites = cs1300Pre
+    cs1380.prerequisites = cs1380Pre
+    cs1410.prerequisites = cs1410Pre1 + cs1410Pre2
+    cs1420.prerequisites = cs1420Pre1 + cs1420Pre2 + cs1420Pre3
+    cs1430.prerequisites = cs1430Pre1 + cs1430Pre2
+    cs1460.prerequisites = none
+    cs1470.prerequisites = cs1470Pre1 + cs1470Pre2 + cs1470Pre3
+    cs1550.prerequisites = none
+    cs1570.prerequisites = cs1570Pre1 + cs1570Pre2
+    cs1670.prerequisites = cs1670Pre
+    cs1680.prerequisites = cs1680Pre
+    cs1951A.prerequisites = cs1951APre
+    cs1952Q.prerequisites = cs1952QPre1 + cs1952QPre2 + cs1952QPre3
+    apma1650.prerequisites = apma1650Pre
+    apma1655.prerequisites = apma1655Pre
+    math0100.prerequisites = none
+    math0180.prerequisites = math0180Pre
+    math0200.prerequisites = math0200Pre
+    math0520.prerequisites = none
+    math0540.prerequisites = none
 
     cs0150.equivalentCourses = cs0170 + cs0190
     cs0170.equivalentCourses = cs0150 + cs0190
     cs0190.equivalentCourses = cs0150 + cs0170
+    cs0200.equivalentCourses = cs0111 + cs0112
     cs0300.equivalentCourses = cs0330
     cs0330.equivalentCourses = cs0300
+
+    math0180.equivalentCourses = math0200
+    math0200.equivalentCourses = math0180
+    math0520.equivalentCourses = math0540
+    math0540.equivalentCourses = math0520
+
+    // define sets of courses for various categories
+    fallCourses.setCourses = cs0111 + cs0150 + cs0170 + cs0190 + cs0320 + cs0330 + cs0410 + cs1010 + cs1260 + cs1410 + cs1430 + cs1570 + math0100 + math0180 + math0200 + apma1650 + apma1655 + math0520 + math0540
+    springCourses.setCourses = cs0112 + cs0200 + cs0220 + cs0320 + cs0300 + cs0500 + cs1300 + cs1380 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1951A + cs1952Q + math0520 + math0540 + math0100 + math0180 + apma1650 + apma1655
+    capstoneCourses.setCourses = cs1260 + cs1300 + cs1380 + cs1410 + cs1420
+    AICourses.setCourses = cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1951A + cs1952Q
+    algoTheoryCourses.setCourses = cs0500 + cs1010 + cs1550 + cs1570
+    calcCourses.setCourses = math0100 + math0180 + math0200
+    thousandLevelCourses.setCourses = cs1010 + cs1260 + cs1300 + cs1380 + cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1670 + cs1680 + cs1951A + cs1952Q
+    additionalCourses.setCourses = cs0320 + cs1010 + cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540
 }
 
 pred hasAlgoTheoryCourse {
     // has some algorithms or theory course (part of the new requirements)
     some semSched: SemesterSchedule | {
-        (cs0500 in semSched.semCourses or cs1010 in semSched.semCourses or cs1550 in semSched.semCourses or cs1570 in semSched.semCourses)
-    
-        cs1010 in semSched.semCourses => cs1010 in usedCourses.foundationCourses
-        cs1550 in semSched.semCourses => cs1550 in usedCourses.foundationCourses
-        cs1570 in semSched.semCourses => cs1570 in usedCourses.foundationCourses
+        some {semSched.semCourses & algoTheoryCourses.setCourses}
+        cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses
+        cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses
+        cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
     }
 }
 
 pred hasAICourse {
     // has some AI course (part of the new requirements)
     some semSched: SemesterSchedule | {
-        (cs0410 in semSched.semCourses or cs1410 in semSched.semCourses or cs1411 in semSched.semCourses or cs1420 in semSched.semCourses or cs1430 in semSched.semCourses or cs1460 in semSched.semCourses or cs1470 in semSched.semCourses or cs1951A in semSched.semCourses or cs1952Q in semSched.semCourses)
-
-        cs1410 in semSched.semCourses => cs1410 in usedCourses.foundationCourses
-        cs1411 in semSched.semCourses => cs1411 in usedCourses.foundationCourses
-        cs1420 in semSched.semCourses => cs1420 in usedCourses.foundationCourses
-        cs1430 in semSched.semCourses => cs1430 in usedCourses.foundationCourses
-        cs1460 in semSched.semCourses => cs1460 in usedCourses.foundationCourses
-        cs1470 in semSched.semCourses => cs1470 in usedCourses.foundationCourses
-        cs1951A in semSched.semCourses => cs1951A in usedCourses.foundationCourses
-        cs1952Q in semSched.semCourses => cs1952Q in usedCourses.foundationCourses
+        some {semSched.semCourses & AICourses.setCourses}
+        cs1410 in semSched.semCourses => cs1410 in foundationCourses.setCourses
+        cs1420 in semSched.semCourses => cs1420 in foundationCourses.setCourses
+        cs1430 in semSched.semCourses => cs1430 in foundationCourses.setCourses
+        cs1460 in semSched.semCourses => cs1460 in foundationCourses.setCourses
+        cs1470 in semSched.semCourses => cs1470 in foundationCourses.setCourses
+        cs1951A in semSched.semCourses => cs1951A in foundationCourses.setCourses
+        cs1952Q in semSched.semCourses => cs1952Q in foundationCourses.setCourses
     }
 }
 
@@ -175,9 +264,9 @@ pred hasSystemsCourse[isAB: Int] {
         (cs0300 in semSched.semCourses or cs0330 in semSched.semCourses)
         or (cs0320 in semSched.semCourses and isAB = 1)
 
-        cs0300 in semSched.semCourses => cs0300 in usedCourses.foundationCourses
-        cs0330 in semSched.semCourses => cs0330 in usedCourses.foundationCourses
-        cs0320 in semSched.semCourses => cs0320 in usedCourses.foundationCourses
+        cs0300 in semSched.semCourses => cs0300 in foundationCourses.setCourses
+        cs0330 in semSched.semCourses => cs0330 in foundationCourses.setCourses
+        cs0320 in semSched.semCourses => cs0320 in foundationCourses.setCourses
     }
 }
 
@@ -197,7 +286,6 @@ pred fifteenTwentyIntroSequence {
 
 pred fulfillsIntroSequence {
     fifteenTwentyIntroSequence or seventeenTwentyIntroSequence or oneelevenTwohundredIntroSequence or oneelevenOnetwelveTwohundredIntroSequence
-
 }
 
 pred seventeenTwentyIntroSequence {
@@ -255,76 +343,33 @@ pred fulfillsAllCoursePrereqs {
 
 pred noEquivalentTaken {
     // cannot take equivalent courses (at least for credit, e.g. you can't get credit for both 300 and 330)
-    no disj semSched1, semSched2: SemesterSchedule | 
+    no semSched1, semSched2: SemesterSchedule | 
         {some course: semSched1.semCourses | 
-            {some equivalentCourse: course.equivalentCourses | equivalentCourse in semSched2.semCourses}}
+            {some course.equivalentCourses & semSched2.semCourses}}
 }
 
 pred atLeastSomeThousandLevel[numThousandLevel: Int] {
     // must take the indicated number of thousand-level courses
-    let thousandLevelCourses = cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q {
-        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses and course not in usedCourses.foundationCourses} >= numThousandLevel
-    }
+    #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses.setCourses and course not in foundationCourses.setCourses} >= numThousandLevel
 }
 
 pred someAdditionalCourses[numAdditional: Int] {
     // must take the indicated number of additional courses
-    let additionalCourses = cs0320 + cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540 {
-        #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses and course not in usedCourses.foundationCourses} >= numAdditional
-    }
+    #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses} >= numAdditional
 }
 
 pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
     // if ScB, must take math0100, math0180, math0200, or have HS credit
     {some semSched: SemesterSchedule | 
-        (math0100 in semSched.semCourses and math0180 in semSched.semCourses and math0200 in semSched.semCourses)}
+        some {semSched.semCourses & calcCourses.setCourses}}
     or isAB = 1 or hasHSCredit = 1
 }
 
 // fulling the capstone requirement means that you take one of these courses in your 7th or 8th semester
 pred fullfillsCapstoneRequirement {
     some semSched: SemesterSchedule | {
-
         semSched.semNumber = 7 or semSched.semNumber = 8
-
-        // (cs1230 in semSched.semCourses and cs1234 in semSched.semCourses)
-        cs1260 in semSched.semCourses
-        or cs1290 in semSched.semCourses
-        or cs1300 in semSched.semCourses
-        or cs1320 in semSched.semCourses
-        or cs1370 in semSched.semCourses
-        or cs1380 in semSched.semCourses
-        or cs1410 in semSched.semCourses
-        or cs1420 in semSched.semCourses
-        // or cs1430 in semSched.semCourses
-        // or cs1440 in semSched.semCourses
-        // or cs1470 in semSched.semCourses
-        // or cs1515 in semSched.semCourses
-        // or cs1600 in semSched.semCourses
-        // or (cs1660 in semSched.semCourses and cs1620 in semSched.semCourses)
-        // or (cs1670 in semSched.semCourses and cs1690 in semSched.semCourses)
-        // or cs1680 in semSched.semCourses
-        // or cs1710 in semSched.semCourses
-        // or cs1730 in semSched.semCourses
-        // or cs1760 in semSched.semCourses
-        // or cs1950U in semSched.semCourses
-        // or cs1951A in semSched.semCourses
-        // or cs1951C in semSched.semCourses
-        // or cs1951I in semSched.semCourses
-        // or cs1951U in semSched.semCourses
-        // or cs1952B in semSched.semCourses
-        // or cs1970 in semSched.semCourses
-        // or cs2240 in semSched.semCourses
-        // or cs2370 in semSched.semCourses
-        // or cs2390 in semSched.semCourses
-        // or cs2420 in semSched.semCourses
-        // or cs2500B in semSched.semCourses
-        // or cs2510 in semSched.semCourses
-        // or cs2950T in semSched.semCourses
-        // or cs2950V in semSched.semCourses
-        // or cs2951I in semSched.semCourses
-        // or cs2952K in semSched.semCourses
-        // or cs2952N in semSched.semCourses
+        and some {semSched.semCourses & capstoneCourses.setCourses}
     } 
 }
 
@@ -342,6 +387,17 @@ pred validSemesterSchedule {
     no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
 }
 
+pred coursesInCorrectSemester {
+    all sem: SemesterSchedule | {
+        remainder[sem.semNumber, 2] = 0 => {all course: sem.semCourses | course in fallCourses.setCourses}
+        remainder[sem.semNumber, 2] = 1 => {all course: sem.semCourses | course in springCourses.setCourses}
+    }
+}
+
+pred wellformedSchedule {
+    validSemesterSchedule and coursesInCorrectSemester
+}
+
 pred limitCSCourses[limit: Int] {
     // limit the CS courses to some number per semester
     all sem: SemesterSchedule | #{sem.semCourses} <= limit and #{sem.semCourses} >= 0
@@ -357,18 +413,34 @@ pred includeCourse[course: Course] {
     some sem: SemesterSchedule | course in sem.semCourses
 }
 
-run {
+pred validSCBPlan {
     establishPrerequisites
-    fulfillsCalcRequirement[0, 0] // 0 for ScB, 1 for AB; second arg is 0 if no HS credit, 1 if HS credit
+    fulfillsCalcRequirement[0, 0] //  second arg is 0 if no HS credit, 1 if HS credit
     fulfillsIntroSequence
-    fulfillsIntermediateRequirements[0] // 0 for ScB, 1 for AB
-    someAdditionalCourses[4] // 4 for ScB, 2 for AB
-    atLeastSomeThousandLevel[5] // 5 for ScB, 2 for AB
+    fulfillsIntermediateRequirements[0]
+    someAdditionalCourses[4]
+    atLeastSomeThousandLevel[5]
     fulfillsAllCoursePrereqs
-    validSemesterSchedule
+    wellformedSchedule
     noEquivalentTaken
-    finishBySem[5]
-} for exactly 8 SemesterSchedule, 8 Int
+}
+
+pred validABPlan {
+    establishPrerequisites
+    fulfillsCalcRequirement[1, 0] // second arg is 0 if no HS credit, 1 if HS credit
+    fulfillsIntroSequence
+    fulfillsIntermediateRequirements[1]
+    someAdditionalCourses[2]
+    atLeastSomeThousandLevel[2]
+    fulfillsAllCoursePrereqs
+    wellformedSchedule
+    noEquivalentTaken
+}
+
+run {
+    validSCBPlan
+    finishBySem[8]
+} for exactly 8 SemesterSchedule, 5 Int
 
 
 /* TESTING:
