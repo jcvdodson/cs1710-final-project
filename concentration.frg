@@ -1,7 +1,6 @@
 #lang forge
 
-// TODO: Account for fall v spring courses
-
+option run_sterling "vis.js"
 
 abstract sig Prerequisite {
     courses: set Course
@@ -144,6 +143,7 @@ pred establishPrerequisites {
 }
 
 pred hasAlgoTheoryCourse {
+    // has some algorithms or theory course (part of the new requirements)
     some semSched: SemesterSchedule | {
         (cs0500 in semSched.semCourses or cs1010 in semSched.semCourses or cs1550 in semSched.semCourses or cs1570 in semSched.semCourses)
     
@@ -154,6 +154,7 @@ pred hasAlgoTheoryCourse {
 }
 
 pred hasAICourse {
+    // has some AI course (part of the new requirements)
     some semSched: SemesterSchedule | {
         (cs0410 in semSched.semCourses or cs1410 in semSched.semCourses or cs1411 in semSched.semCourses or cs1420 in semSched.semCourses or cs1430 in semSched.semCourses or cs1460 in semSched.semCourses or cs1470 in semSched.semCourses or cs1951A in semSched.semCourses or cs1952Q in semSched.semCourses)
 
@@ -169,6 +170,7 @@ pred hasAICourse {
 }
 
 pred hasSystemsCourse[isAB: Int] {
+    // must have a systems course -- for the AB, this includes cs0320
     some semSched: SemesterSchedule | {
         (cs0300 in semSched.semCourses or cs0330 in semSched.semCourses)
         or (cs0320 in semSched.semCourses and isAB = 1)
@@ -180,10 +182,11 @@ pred hasSystemsCourse[isAB: Int] {
 }
 
 pred fulfillsIntermediateRequirements[isAB: Int] {
-    hasSystemsCourse[isAB]
+    hasSystemsCourse[isAB] and hasAICourse and hasAlgoTheoryCourse
 }
 
 pred fifteenTwentyIntroSequence {
+    // take cs0150 and then cs0200 in a later semester
     some semSched: SemesterSchedule | {
         cs0150 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
             cs0200 in laterSemSchedule.semCourses
@@ -198,6 +201,7 @@ pred fulfillsIntroSequence {
 }
 
 pred seventeenTwentyIntroSequence {
+    // take cs0170 and then cs0200 in a later semester
     some semSched: SemesterSchedule | {
         cs0170 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
             cs0200 in laterSemSchedule.semCourses
@@ -207,6 +211,7 @@ pred seventeenTwentyIntroSequence {
 }
 
 pred oneelevenTwohundredIntroSequence {
+    // take cs0111 and then cs0200 in a later semester
     some semSched: SemesterSchedule | {
         cs0111 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
             cs0200 in laterSemSchedule.semCourses
@@ -216,6 +221,7 @@ pred oneelevenTwohundredIntroSequence {
 }
 
 pred oneelevenOnetwelveTwohundredIntroSequence {
+    // take cs0111 and then cs0112 and then cs0200 in a later semester
     some semSched: SemesterSchedule | {
         cs0111 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
             cs0112 in laterSemSchedule.semCourses and 
@@ -229,9 +235,13 @@ pred oneelevenOnetwelveTwohundredIntroSequence {
 }
 
 pred fulfillsAllCoursePrereqs {
+    // for all semesters
     all semSched: SemesterSchedule | {
+        // for all courses in that semester
         all course: semSched.semCourses | {
+            // for all prerequisite sets of that course
             all prereq: course.prerequisites | {
+                // we must have taken one course in the set of prerequisites in some earlier semester
                 some earlierSemSchedule: SemesterSchedule | {
                     some prereqCourse: prereq.courses | {
                         prereqCourse in earlierSemSchedule.semCourses
@@ -244,24 +254,28 @@ pred fulfillsAllCoursePrereqs {
 }
 
 pred noEquivalentTaken {
+    // cannot take equivalent courses (at least for credit, e.g. you can't get credit for both 300 and 330)
     no disj semSched1, semSched2: SemesterSchedule | 
         {some course: semSched1.semCourses | 
             {some equivalentCourse: course.equivalentCourses | equivalentCourse in semSched2.semCourses}}
 }
 
 pred atLeastSomeThousandLevel[numThousandLevel: Int] {
+    // must take the indicated number of thousand-level courses
     let thousandLevelCourses = cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q {
         #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses and course not in usedCourses.foundationCourses} >= numThousandLevel
     }
 }
 
 pred someAdditionalCourses[numAdditional: Int] {
+    // must take the indicated number of additional courses
     let additionalCourses = cs0320 + cs1010 + cs1120 + cs1410 + cs1411 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540 {
         #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses and course not in usedCourses.foundationCourses} >= numAdditional
     }
 }
 
 pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
+    // if ScB, must take math0100, math0180, math0200, or have HS credit
     {some semSched: SemesterSchedule | 
         (math0100 in semSched.semCourses and math0180 in semSched.semCourses and math0200 in semSched.semCourses)}
     or isAB = 1 or hasHSCredit = 1
@@ -328,6 +342,21 @@ pred validSemesterSchedule {
     no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
 }
 
+pred limitCSCourses[limit: Int] {
+    // limit the CS courses to some number per semester
+    all sem: SemesterSchedule | #{sem.semCourses} <= limit and #{sem.semCourses} >= 0
+}
+
+pred finishBySem[semNum: Int] {
+    // no concentration courses beyond the given semester number (since we use 0-based sem numbers, subtract one)
+    all sem: SemesterSchedule | sem.semNumber > subtract[semNum, 1] => #{sem.semCourses} = 0
+}
+
+pred includeCourse[course: Course] {
+    // include the given course in the course plan
+    some sem: SemesterSchedule | course in sem.semCourses
+}
+
 run {
     establishPrerequisites
     fulfillsCalcRequirement[0, 0] // 0 for ScB, 1 for AB; second arg is 0 if no HS credit, 1 if HS credit
@@ -338,7 +367,8 @@ run {
     fulfillsAllCoursePrereqs
     validSemesterSchedule
     noEquivalentTaken
-} for exactly 7 SemesterSchedule
+    finishBySem[5]
+} for exactly 8 SemesterSchedule, 8 Int
 
 
 /* TESTING:

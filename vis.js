@@ -6,14 +6,6 @@ fullSchedule.style.justifyContent = 'center';
 fullSchedule.style.alignItems = 'center';
 div.appendChild(fullSchedule);
 
-// there will be 8 semesetr schedules
-// arrnage them in a 4 row, 2 column grid
-// each semester schedule will be a div
-// each semester schedule will have a header with the semester number + 1
-// each semester schedule will have a table with the courses
-// each course will be a row in the table
-// each course will have a cell for the course number
-
 function createSemesterSchedule(semester, flexRow) {
     var semesterSchedule = document.createElement('div');
     semesterSchedule.style.border = '1px solid black';
@@ -123,35 +115,14 @@ function getSemesterCourses(semesterNumber) {
             var course = SemesterSchedule6.semCourses._tuples[i];
             courses.push(course._atoms[0]._id.slice(0, -1));
         }
+    } else if (SemesterSchedule7.semNumber._id == semesterNumber) {
+        for (var i = 0; i < SemesterSchedule7.semCourses._tuples.length; i++) {
+            var course = SemesterSchedule7.semCourses._tuples[i];
+            courses.push(course._atoms[0]._id.slice(0, -1));
+        }
     }
     return courses;
 }
-
-// function createBoardData(board) {
-//     var boardData = [];
-//     for (r = 0; r <= 6; r++) {
-//         var row = [];
-//         for (c = 0; c <= 7; c++) {
-//             row.push("-1");
-//         }
-//         boardData.push(row);
-//     }
-
-//     const pieces = board.join(places).tuples();
-//     for (idx = 0; idx < pieces.length; idx++) {
-//         const atms = pieces[idx]._atoms;
-//         const pieceRow = atms[0].toString();
-//         const pieceCol = atms[1].toString();
-//         const piece = atms[2].toString();
-//         if (piece.includes("Red")) {
-//             boardData[pieceRow][pieceCol] = "0";
-//         }
-//         else if (piece.includes("Yellow")) {
-//             boardData[pieceRow][pieceCol] = "1";
-//         }
-//     }
-//     return boardData;
-// }
   
 function createFullSchedule() {
     // create 4 rows, each with 2 semester schedules
