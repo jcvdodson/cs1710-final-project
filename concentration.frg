@@ -57,6 +57,7 @@ one sig cs1550 extends Course {}
 one sig cs1570 extends Course {}
 one sig cs1670 extends Course {}
 one sig cs1680 extends Course {}
+one sig cs1710 extends Course {}
 one sig cs1951A extends Course {}
 one sig cs1952Q extends Course {}
 one sig apma1650 extends Course {}
@@ -110,6 +111,8 @@ one sig cs1570Pre2 extends Prerequisite {}
 one sig cs1670Pre extends Prerequisite {}
 
 one sig cs1680Pre extends Prerequisite {}
+
+one sig cs1710Pre extends Prerequisite {}
 
 one sig cs1951APre extends Prerequisite {}
 
@@ -168,6 +171,8 @@ pred establishPrerequisites {
 
     cs1680Pre.courses = cs0300 + cs0330
 
+    cs1710Pre.courses = cs0190 + cs0200
+
     cs1951APre.courses = cs0190 + cs0200
 
     cs1952QPre1.courses = cs0190 + cs0200
@@ -203,6 +208,7 @@ pred establishPrerequisites {
     cs1570.prerequisites = cs1570Pre1 + cs1570Pre2
     cs1670.prerequisites = cs1670Pre
     cs1680.prerequisites = cs1680Pre
+    cs1710.prerequisites = cs1710Pre
     cs1951A.prerequisites = cs1951APre
     cs1952Q.prerequisites = cs1952QPre1 + cs1952QPre2 + cs1952QPre3
     apma1650.prerequisites = apma1650Pre
