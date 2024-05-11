@@ -67,6 +67,8 @@ one sig math0180 extends Course {}
 one sig math0200 extends Course {}
 one sig math0520 extends Course {}
 one sig math0540 extends Course {}
+one sig math1450 extends Course {}
+one sig math1530 extends Course {}
 
 one sig cs0200Pre extends Prerequisite {}
 one sig cs0300Pre extends Prerequisite {}
@@ -240,6 +242,17 @@ pred establishPrerequisites {
     calcCourses.setCourses = math0100 + math0180 + math0200
     thousandLevelCourses.setCourses = cs1010 + cs1260 + cs1300 + cs1380 + cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1670 + cs1680 + cs1951A + cs1952Q
     additionalCourses.setCourses = cs0320 + cs1010 + cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1570 + cs1951A + cs1952Q + math0520 + math0540
+}
+
+// One of 220, 1450, APMA 1650/1655, or MATH 1530
+pred fullFillsMathFoundations {
+    some semSched: SemesterSchedule | {
+        cs0220 in semSched.semCourses or
+        math1450 in semSched.semCourses or
+        apma1650 in semSched.semCourses or
+        apma1655 in semSched.semCourses or
+        math1530 in semSched.semCourses
+    }
 }
 
 pred hasAlgoTheoryCourse {
@@ -458,6 +471,7 @@ pred validSCBPlan {
     wellformedSchedule
     noEquivalentTaken
     fullfillsCapstoneRequirement
+    fullFillsMathFoundations
 }
 
 pred validABPlan {
@@ -471,6 +485,7 @@ pred validABPlan {
     wellformedSchedule
     noEquivalentTaken
     fullfillsCapstoneRequirement
+    fullFillsMathFoundations
 }
 
 run {

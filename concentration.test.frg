@@ -2,69 +2,16 @@
 
 open "concentration.frg"
 
-// example of valid and invalid schedule
+// IMPORTANT: you may see warnings stating that the some following tests do no not 
+// reference their respective predicate, this is because those predicates takes in an argument
+// depending on whether we are specifiying for the SCB or AB concentration.
+// We were having some trouble writing assert statements for some predicate so
+// we instead call another predicate which calls the orginal predicate
+// with the argument passed in 
+// FOR example: the hasSCBSysCourse and hasABSysCourse predicates
 
 
-// 11,12 200, where you don't need to take 12
 
-
-// math 100 needs to be in the schedule
-
-
-// min 3 foundations courses with one in each area
-// --- can take multiple from each area (check for over/under constrain)
-// 3 Foundations courses, 1 in each area:
-// Algorithms/Theory course
-// ---one of 0500, 1010, 1550, or 1570
-// AI/ML/DS course
-// ---one of 410 (new in Fall 2024), 1410, 1420, 1430, 1460, 1470, or 1951A
-// Systems course
-// ---one of CSCI300 or 330 (320 moves to addl courses)
-
-
-// min 5 1000 level courses
-// --- can take more than 5
-// --- Cannot overlap any 1000-level courses used to satisfy Foundations requirements.
-// --- ex: 1410, 1420, 1430, 1460, 1470, or 1951A AND 1010, 1550, or 1570
-// check if any of those courses above are in the schedule, there are 5 other 1000 level courses
-
-
-// min 4 additional courses
-// ex: 320 1000- or 2000-level CSCI courses, math0520, math0530
-// Cannot overlap any 1000-level courses used to satisfy Foundations requirements.
-
-
-// some capstone course
-
-
-pred eightSemesters {
-    all sem: SemesterSchedule | sem.semNumber >= 0 and sem.semNumber <= 7 
-}
-
-pred disjointSemesters {
-    no disj sem1, sem2: SemesterSchedule | sem1.semNumber = sem2.semNumber
-}
-
-pred maxFiveCourses {
-    all sem: SemesterSchedule | #{sem.semCourses} <= 5 and #{sem.semCourses} >= 0
-}
-
-pred cantTakeSameCourseTwice {
-    no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
-}
-
-pred coursesInProperSeason {
-    all sem: SemesterSchedule | {
-        remainder[sem.semNumber, 2] = 0 => {all course: sem.semCourses | course in fallCourses.setCourses}
-        remainder[sem.semNumber, 2] = 1 => {all course: sem.semCourses | course in springCourses.setCourses}
-    }
-}
-
-// no classes in any semester is wellformed
-pred noClasses {
-    eightSemesters and disjointSemesters and
-    {all sem: SemesterSchedule | sem.semCourses = none}
-}
 
 // test suite for wellformedSchedule {
 //     // eight semester constraint
@@ -335,6 +282,32 @@ test suite for fulfillsIntermediateRequirements {
             fulfillsAllCoursePrereqs
             fulfillsIntermediateRequirementsAB
         } is unsat
+
+        // taking multiple courses from each area is valid (testing for overconstraining)
+        // student is not limited to only one course from each area
+        allCoursesValidSCB : {
+            some sem : SemesterSchedule | {
+                some disj c1, c2 : AICourses.setCourses | c1 in sem.semCourses and c2 in sem.semCourses
+                some disj c1, c2 : algoTheoryCourses.setCourses | c1 in sem.semCourses and c2 in sem.semCourses
+                cs0300 in sem.semCourses or cs0330 in sem.semCourses
+            }
+
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntermediateRequirementsSCB
+        } is sat
+
+        allCoursesValidAB : {
+            some sem : SemesterSchedule | {
+                some disj c1, c2 : AICourses.setCourses | c1 in sem.semCourses and c2 in sem.semCourses
+                some disj c1, c2 : algoTheoryCourses.setCourses | c1 in sem.semCourses and c2 in sem.semCourses
+                cs0300 in sem.semCourses or cs0320 in sem.semCourses or cs0330 in sem.semCourses
+            }
+
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntermediateRequirementsAB
+        } is sat
     }    
     
 }
@@ -344,52 +317,319 @@ pred additionalCoursesSCB {
 }
 
 pred additionalCoursesAB {
-    someAdditionalCourses[5]
+    someAdditionalCourses[2]
 }
 
-pred someAdditionalCourses[numAdditional: Int] {
-    // must take the indicated number of additional courses
-    #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses} >= numAdditional
+// pred someAdditionalCourses[numAdditional: Int] {
+//     // must take the indicated number of additional courses
+//     #{sem: SemesterSchedule, course: Course | 
+//         course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses and
+//         course in usedAdditionalCourses.setCourses and course not in usedThousandLevelCourses.setCourses
+//     } >= numAdditional
+// }
+
+// test suite for someAdditionalCourses {
+
+//     // additional courses must be taken to fulfill the CS requirement
+//     test expect {
+//         noAdditionalCoursesNotValidSCB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesSCB
+//         } is unsat
+
+//         noAdditionalCoursesNotValidAB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesAB
+//         } is unsat
+
+        
+
+//         // some course is in both additional and foundation courses is not valid
+//         additionalAndFoundationNotValidSCB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesSCB
+//         } is sat
+
+//         additionalAndFoundationNotValidAB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesAB
+//         } is sat
+
+//         // additional course can't be an already utilized 1000 level course
+//         additionalAndUsedThousandNotValidSCB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesSCB
+//         } is sat
+
+//         additionalAndUsedThousandNotValidAB : {
+//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesAB
+//         } is sat
+
+//         // no limit on the number of additional courses you can take
+//         // also making sure this predicate does not constrain the number of classes in a semester
+//         allAdditionalCoursesValidSCB : {
+//             some  disj sem1, sem2 : SemesterSchedule | {
+//                 some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+//             }
+
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesSCB
+//         } is sat
+
+//         allAdditionalCoursesValidAB : {
+//             some  disj sem1, sem2 : SemesterSchedule | {
+//                 some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+//             }
+
+//             establishPrerequisites
+//             fulfillsAllCoursePrereqs
+//             additionalCoursesAB
+//         } is sat
+
+//     }
+// }
+
+pred thousandLevelCoursesSCB {
+    atLeastSomeThousandLevel[5]
 }
 
-test suite for someAdditionalCourses {
+pred thousandLevelCoursesAB {
+    atLeastSomeThousandLevel[2]
+}
 
-    test expect {
-        noAdditionalCoursesNotValidSCB : {
-            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
-            establishPrerequisites
-            fulfillsAllCoursePrereqs
-            additionalCoursesSCB
-        } is unsat
-
-        noAdditionalCoursesNotValidAB : {
-            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
-            establishPrerequisites
-            fulfillsAllCoursePrereqs
-            additionalCoursesAB
-        } is unsat
-    }
+// test suite for atLeastSomeThousandLevel {
     
+//         // must take at least the indicated number of 1000 level courses
+//         test expect {
+//             noThousandLevelNotValidSCB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesSCB
+//             } is unsat
     
+//             noThousandLevelNotValidAB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesAB
+//             } is unsat
+    
+//             // some course is in both 1000 level and foundation courses is not valid
+//             thousandLevelAndFoundationNotValidSCB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesSCB
+//             } is sat
+    
+//             thousandLevelAndFoundationNotValidAB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesAB
+//             } is sat
+    
+//             // 1000 level course can't be an already utilized additional course
+//             thousandLevelAndUsedAdditionalNotValidSCB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesSCB
+//             } is sat
+    
+//             thousandLevelAndUsedAdditionalNotValidAB : {
+//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
+//                 establishPrerequisites
+//                 fulfillsAllCoursePrereqs
+//                 thousandLevelCoursesAB
+//             } is sat
+    
+//             // no limit on the number of 1000 level courses you can take
+//             // also making sure this predicate does not constrain the number of classes in a semester
+//             allThousandLevelCoursesValidSCB : {
+//                 some  disj sem1, sem2 : SemesterSchedule | {
+//                     some disj c1, c2, c3, c4, c5, c6, c7 : thousandLevelCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+//                 }
+//             } is sat
+//         }
+// }
 
-}
 
-test suite for atLeastSomeThousandLevel {
-
+pred noEquivalentCoursesAllowed {
+    no semSched1, semSched2: SemesterSchedule | 
+        {some course: semSched1.semCourses | 
+            {some course.equivalentCourses & semSched2.semCourses}}
 }
 
 test suite for noEquivalentTaken {
+    assert noEquivalentCoursesAllowed is necessary for noEquivalentTaken
+
+    
+    test expect {
+        // can't have equivalent courses in the same semester
+        equivalentCoursesNotValid : {
+            {some sem: SemesterSchedule | cs0330 in sem.semCourses and cs0300 in sem.semCourses}
+            noEquivalentTaken
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+        } is unsat
+
+        // can't have equivalent courses in different semesters
+        equivalentCoursesNotValidDiffSem : {
+            {some disj sem1, sem2: SemesterSchedule | cs0330 in sem1.semCourses and cs0300 in sem2.semCourses}
+            noEquivalentTaken
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+        } is unsat
+
+        // can take any class other than equivalent courses
+        allCoursesValid : {
+            some sem: SemesterSchedule | {
+                some disj c1, c2 : Course | c1 in sem.semCourses and c2 in sem.semCourses and  #{c1.equivalentCourses & c2} = 0
+            }
+            noEquivalentTaken
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+        } is sat
+
+        // can take any class other equivalent in different semesters
+        allCoursesValidDiffSem : {
+            some disj sem1, sem2: SemesterSchedule | {
+                some disj c1, c2 : Course | c1 in sem1.semCourses and c2 in sem2.semCourses and  #{c1.equivalentCourses & c2} = 0
+            }
+            noEquivalentTaken
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+        } is sat
+    }
 
 }
 
+// pred finishBySem[semNum: Int] {
+//     // no concentration courses beyond the given semester number (since we use 0-based sem numbers, subtract one)
+//     all sem: SemesterSchedule | sem.semNumber > subtract[semNum, 1] => #{sem.semCourses} = 0
+// }
+
 test suite for finishBySem {
+    
+    test expect {
+        finishBySemValid : {
+            some disj c1, c2: Course, s1, s2, s3: SemesterSchedule | 
+                s1.semNumber = 0 and c1 in s1.semCourses and
+                s2.semNumber = 1 and c2 in s2.semCourses and
+                s3.semNumber = 2 and no s3.semCourses and
+                finishBySem[2]
+        } is sat
+    } 
 
 }
 
 
 
 test suite for validSCBPlan {
+    // math100 needs to be taken
     assert hasMath100 is necessary for validSCBPlan
+    
+    // make sure concentration plan is wellformed
+    assert eightSemesters is necessary for validSCBPlan
+    assert disjointSemesters is necessary for validSCBPlan
+    assert maxFiveCourses is necessary for validSCBPlan
+    assert cantTakeSameCourseTwice is necessary for validSCBPlan
+    assert coursesInProperSeason is necessary for validSCBPlan
+
+    // math foundations must be satisfied
+    assert satisfiesMathFoundations is necessary for validSCBPlan
+
+    // intermediate requirements must be satisfied
+    assert fulfillsIntermediateRequirementsSCB is necessary for validSCBPlan
+
+    // additional courses must be taken
+    assert additionalCoursesSCB is necessary for validSCBPlan
+
+    // 1000 level courses must be taken
+    assert thousandLevelCoursesSCB is necessary for validSCBPlan
+
+    // no equivalent courses can be taken
+    assert noEquivalentCoursesAllowed is necessary for validSCBPlan
+
+    // capstone must be taken
+    assert satisfiesCapstone is necessary for validSCBPlan 
+
+    // make sure the model doesn't allow anyone to take no CS classes overall
+    assert notNoClasses is necessary for validSCBPlan
+
+    // its possible to have no CS classes towards concentration in a semester
+    assert noClassesInASem is sufficient for validSCBPlan for 8 SemesterSchedule
+
+    test expect {
+        
+        // can finish all requirements in 4 semesters
+        fourSemestersValid : {
+            {some disj s1, s2, s3, s4: SemesterSchedule | 
+                satisfiesMathFoundations and
+                fulfillsIntermediateRequirementsSCB and
+                additionalCoursesSCB and
+                thousandLevelCoursesSCB and
+                satisfiesCapstone
+            }
+            validSCBPlan
+        } is sat
+
+        // can't finish all requirements in 1 semester
+        oneSemesterNotValid : {
+            {one sem: SemesterSchedule | 
+                satisfiesMathFoundations and
+                fulfillsIntermediateRequirementsSCB and
+                additionalCoursesSCB and
+                thousandLevelCoursesSCB and
+                satisfiesCapstone
+            }
+            validSCBPlan
+        } is unsat
+
+        // cant have overlap between 1000 level and additional courses
+        noOverlapThousandAndAdditionalNotValid : {
+            some sem: SemesterSchedule | {
+                some c1: Course | c1 in usedAdditionalCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
+                some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in usedAdditionalCourses.setCourses
+            }
+            validSCBPlan
+        } is sat
+
+        // cant have overlap between 1000 level and foundation courses
+        noOverlapThousandAndFoundationNotValid : {
+            some sem: SemesterSchedule | {
+                some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
+                some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in foundationCourses.setCourses
+            }
+            validSCBPlan
+        } is sat
+
+        // cant have overlap between additional and foundation courses
+        noOverlapAdditionalAndFoundationNotValid : {
+            some sem: SemesterSchedule | {
+                some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedAdditionalCourses.setCourses
+                some c2: Course | c2 in usedAdditionalCourses.setCourses implies c2 not in foundationCourses.setCourses
+            }
+            validSCBPlan
+        } is sat
+    }
+
 
 }
 
@@ -397,9 +637,74 @@ test suite for validABPlan {
 
 }
 
+
+
+
+
+pred satisfiesCapstone {
+    some semSched: SemesterSchedule | {
+        semSched.semNumber = 6 or semSched.semNumber = 7
+        and some {semSched.semCourses & capstoneCourses.setCourses}
+    }
+}
+
+pred satisfiesMathFoundations {
+    some semSched: SemesterSchedule | {
+        cs0220 in semSched.semCourses or
+        math1450 in semSched.semCourses or
+        apma1650 in semSched.semCourses or
+        apma1655 in semSched.semCourses or
+        math1530 in semSched.semCourses
+    }
+
+}
+
+
+
 pred hasMath100 {
     some sem: SemesterSchedule | math0100 in sem.semCourses
 }
+
+pred eightSemesters {
+    all sem: SemesterSchedule | sem.semNumber >= 0 and sem.semNumber <= 7 
+}
+
+pred disjointSemesters {
+    no disj sem1, sem2: SemesterSchedule | sem1.semNumber = sem2.semNumber
+}
+
+pred maxFiveCourses {
+    all sem: SemesterSchedule | #{sem.semCourses} <= 5 and #{sem.semCourses} >= 0
+}
+
+pred cantTakeSameCourseTwice {
+    no disj sem1, sem2: SemesterSchedule | sem1.semCourses & sem2.semCourses != none
+}
+
+pred coursesInProperSeason {
+    all sem: SemesterSchedule | {
+        remainder[sem.semNumber, 2] = 0 => {all course: sem.semCourses | course in fallCourses.setCourses}
+        remainder[sem.semNumber, 2] = 1 => {all course: sem.semCourses | course in springCourses.setCourses}
+    }
+}
+
+// no classes in any semester is wellformed
+pred noClasses {
+    eightSemesters and disjointSemesters and
+    {all sem: SemesterSchedule | sem.semCourses = none}
+}
+
+pred notNoClasses {
+    some sem: SemesterSchedule | sem.semCourses != none
+}
+
+pred noClassesInASem {
+    some sem: SemesterSchedule | #{sem.semCourses} = 0
+    validSCBPlan
+}
+
+
+
 
 
 
