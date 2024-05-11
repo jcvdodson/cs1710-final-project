@@ -81,9 +81,6 @@ one sig cs0410Pre3 extends Prerequisite {}
 
 one sig cs0500Pre1 extends Prerequisite {}
 one sig cs0500Pre2 extends Prerequisite {}
-one sig cs0500Pre3 extends Prerequisite {}
-one sig cs0500Pre4 extends Prerequisite {}
-one sig cs0500Pre5 extends Prerequisite {}
 
 one sig cs1010Pre extends Prerequisite {}
 
@@ -139,10 +136,7 @@ pred establishPrerequisites {
     cs0410Pre3.courses = math0520 + math0540
 
     cs0500Pre1.courses = cs0220
-    cs0500Pre2.courses = cs0150 + cs0200
-    cs0500Pre3.courses = cs0170 + cs0200
-    cs0500Pre4.courses = cs0111 + cs0112 + cs0200
-    cs0500Pre5.courses = cs0190 + cs0200
+    cs0500Pre2.courses = cs0200
 
     cs1010Pre.courses = cs0220 + cs1550 + apma1650 + apma1655 + cs1570
 
@@ -187,6 +181,8 @@ pred establishPrerequisites {
     math0180Pre.courses = math0100
     math0200Pre.courses = math0100
 
+    cs0111.prerequisites = none
+    cs0112.prerequisites = none
     cs0150.prerequisites = none
     cs0170.prerequisites = none
     cs0190.prerequisites = none
@@ -196,7 +192,7 @@ pred establishPrerequisites {
     cs0320.prerequisites = cs0320Pre
     cs0330.prerequisites = cs0330Pre
     cs0410.prerequisites = cs0410Pre1 + cs0410Pre2 + cs0410Pre3
-    cs0500.prerequisites = cs0500Pre1 + cs0500Pre2 + cs0500Pre3 + cs0500Pre4 + cs0500Pre5
+    cs0500.prerequisites = cs0500Pre1 + cs0500Pre2
     cs1010.prerequisites = cs1010Pre
     cs1260.prerequisites = cs1260Pre
     cs1300.prerequisites = cs1300Pre
@@ -344,49 +340,38 @@ pred fulfillsIntermediateRequirements[isAB: Int] {
 
 pred fifteenTwentyIntroSequence {
     // take cs0150 and then cs0200 in a later semester
-    some semSched: SemesterSchedule | {
-        cs0150 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
-            cs0200 in laterSemSchedule.semCourses
-            laterSemSchedule.semNumber > semSched.semNumber
-        }}
+    some disj semSched: SemesterSchedule, laterSemSchedule: SemesterSchedule | {
+        cs0150 in semSched.semCourses and cs0200 in laterSemSchedule.semCourses
+        laterSemSchedule.semNumber > semSched.semNumber
     }
 }
 
 pred fulfillsIntroSequence {
-    fifteenTwentyIntroSequence or seventeenTwentyIntroSequence or oneelevenTwohundredIntroSequence or oneelevenOnetwelveTwohundredIntroSequence
+    fifteenTwentyIntroSequence or seventeenTwentyIntroSequence or oneelevenTwohundredIntroSequence or oneelevenOnetwelveTwohundredIntroSequence or 
+    {some semSched: SemesterSchedule | cs0190 in semSched.semCourses}
 }
 
 pred seventeenTwentyIntroSequence {
     // take cs0170 and then cs0200 in a later semester
-    some semSched: SemesterSchedule | {
-        cs0170 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
-            cs0200 in laterSemSchedule.semCourses
-            laterSemSchedule.semNumber > semSched.semNumber
-        }}
+    some disj semSched: SemesterSchedule, laterSemSchedule: SemesterSchedule | {
+        cs0170 in semSched.semCourses and cs0200 in laterSemSchedule.semCourses
+        laterSemSchedule.semNumber > semSched.semNumber
     }
 }
 
 pred oneelevenTwohundredIntroSequence {
     // take cs0111 and then cs0200 in a later semester
-    some semSched: SemesterSchedule | {
-        cs0111 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
-            cs0200 in laterSemSchedule.semCourses
-            laterSemSchedule.semNumber > semSched.semNumber
-        }}
+    some disj semSched: SemesterSchedule, laterSemSchedule: SemesterSchedule | {
+        cs0111 in semSched.semCourses and cs0200 in laterSemSchedule.semCourses
+        laterSemSchedule.semNumber > semSched.semNumber
     }
 }
 
 pred oneelevenOnetwelveTwohundredIntroSequence {
     // take cs0111 and then cs0112 and then cs0200 in a later semester
-    some semSched: SemesterSchedule | {
-        cs0111 in semSched.semCourses and {some laterSemSchedule: SemesterSchedule | {
-            cs0112 in laterSemSchedule.semCourses and 
-                {some evenLaterSemSchedule: SemesterSchedule | {
-                    cs0200 in evenLaterSemSchedule.semCourses
-                    evenLaterSemSchedule.semNumber > laterSemSchedule.semNumber
-                }}
-            laterSemSchedule.semNumber > semSched.semNumber
-        }}
+    some disj semSched: SemesterSchedule, laterSemSchedule: SemesterSchedule, evenLaterSemSchedule: SemesterSchedule | {
+        cs0111 in semSched.semCourses and cs0112 in laterSemSchedule.semCourses and cs0200 in evenLaterSemSchedule.semCourses
+        laterSemSchedule.semNumber > semSched.semNumber and evenLaterSemSchedule.semNumber > laterSemSchedule.semNumber
     }
 }
 
