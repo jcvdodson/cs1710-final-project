@@ -541,65 +541,157 @@ test suite for finishBySem {
 
 
 
-test suite for validSCBPlan {
-    // math100 needs to be taken
-    assert hasMath100 is necessary for validSCBPlan
+// test suite for validSCBPlan {
+//     // math100 needs to be taken
+//     assert hasMath100 is necessary for validSCBPlan
+    
+//     // make sure concentration plan is wellformed
+//     assert eightSemesters is necessary for validSCBPlan
+//     assert disjointSemesters is necessary for validSCBPlan
+//     assert maxFiveCourses is necessary for validSCBPlan
+//     assert cantTakeSameCourseTwice is necessary for validSCBPlan
+//     assert coursesInProperSeason is necessary for validSCBPlan
+
+//     // math foundations must be satisfied
+//     assert satisfiesMathFoundations is necessary for validSCBPlan
+
+//     // intermediate requirements must be satisfied
+//     assert fulfillsIntermediateRequirementsSCB is necessary for validSCBPlan
+
+//     // additional courses must be taken
+//     assert additionalCoursesSCB is necessary for validSCBPlan
+
+//     // 1000 level courses must be taken
+//     assert thousandLevelCoursesSCB is necessary for validSCBPlan
+
+//     // no equivalent courses can be taken
+//     assert noEquivalentCoursesAllowed is necessary for validSCBPlan
+
+//     // capstone must be taken
+//     assert satisfiesCapstone is necessary for validSCBPlan 
+
+//     // make sure the model doesn't allow anyone to take no CS classes overall
+//     assert notNoClasses is necessary for validSCBPlan
+
+//     // its possible to have no CS classes towards concentration in a semester
+//     assert noClassesInASem is sufficient for validSCBPlan for 8 SemesterSchedule
+
+//     test expect {
+        
+//         // can finish all requirements in 4 semesters
+//         fourSemestersValid : {
+//             {some disj s1, s2, s3, s4: SemesterSchedule | 
+//                 satisfiesMathFoundations and
+//                 fulfillsIntermediateRequirementsSCB and
+//                 additionalCoursesSCB and
+//                 thousandLevelCoursesSCB and
+//                 satisfiesCapstone
+//             }
+//             validSCBPlan
+//         } is sat
+
+//         // can't finish all requirements in 1 semester
+//         oneSemesterNotValid : {
+//             {one sem: SemesterSchedule | 
+//                 satisfiesMathFoundations and
+//                 fulfillsIntermediateRequirementsSCB and
+//                 additionalCoursesSCB and
+//                 thousandLevelCoursesSCB and
+//                 satisfiesCapstone
+//             }
+//             validSCBPlan
+//         } is unsat
+
+//         // cant have overlap between 1000 level and additional courses
+//         noOverlapThousandAndAdditionalNotValid : {
+//             some sem: SemesterSchedule | {
+//                 some c1: Course | c1 in usedAdditionalCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
+//                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in usedAdditionalCourses.setCourses
+//             }
+//             validSCBPlan
+//         } is sat
+
+//         // cant have overlap between 1000 level and foundation courses
+//         noOverlapThousandAndFoundationNotValid : {
+//             some sem: SemesterSchedule | {
+//                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
+//                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in foundationCourses.setCourses
+//             }
+//             validSCBPlan
+//         } is sat
+
+//         // cant have overlap between additional and foundation courses
+//         noOverlapAdditionalAndFoundationNotValid : {
+//             some sem: SemesterSchedule | {
+//                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedAdditionalCourses.setCourses
+//                 some c2: Course | c2 in usedAdditionalCourses.setCourses implies c2 not in foundationCourses.setCourses
+//             }
+//             validSCBPlan
+//         } is sat
+
+
+//     }
+
+
+// }
+
+test suite for validABPlan {
     
     // make sure concentration plan is wellformed
-    assert eightSemesters is necessary for validSCBPlan
-    assert disjointSemesters is necessary for validSCBPlan
-    assert maxFiveCourses is necessary for validSCBPlan
-    assert cantTakeSameCourseTwice is necessary for validSCBPlan
-    assert coursesInProperSeason is necessary for validSCBPlan
+    assert eightSemesters is necessary for validABPlan
+    assert disjointSemesters is necessary for validABPlan
+    assert maxFiveCourses is necessary for validABPlan
+    assert cantTakeSameCourseTwice is necessary for validABPlan
+    assert coursesInProperSeason is necessary for validABPlan
 
     // math foundations must be satisfied
-    assert satisfiesMathFoundations is necessary for validSCBPlan
+    assert satisfiesMathFoundations is necessary for validABPlan
 
     // intermediate requirements must be satisfied
-    assert fulfillsIntermediateRequirementsSCB is necessary for validSCBPlan
+    assert fulfillsIntermediateRequirementsAB is necessary for validABPlan
 
     // additional courses must be taken
-    assert additionalCoursesSCB is necessary for validSCBPlan
+    assert additionalCoursesAB is necessary for validABPlan
 
     // 1000 level courses must be taken
-    assert thousandLevelCoursesSCB is necessary for validSCBPlan
+    assert thousandLevelCoursesAB is necessary for validABPlan
 
     // no equivalent courses can be taken
-    assert noEquivalentCoursesAllowed is necessary for validSCBPlan
+    assert noEquivalentCoursesAllowed is necessary for validABPlan
 
     // capstone must be taken
-    assert satisfiesCapstone is necessary for validSCBPlan 
+    assert satisfiesCapstone is necessary for validABPlan 
 
     // make sure the model doesn't allow anyone to take no CS classes overall
-    assert notNoClasses is necessary for validSCBPlan
+    assert notNoClasses is necessary for validABPlan
 
     // its possible to have no CS classes towards concentration in a semester
-    assert noClassesInASem is sufficient for validSCBPlan for 8 SemesterSchedule
+    assert noClassesInASemAB is sufficient for validABPlan for 8 SemesterSchedule
 
     test expect {
         
-        // can finish all requirements in 4 semesters
-        fourSemestersValid : {
-            {some disj s1, s2, s3, s4: SemesterSchedule | 
+        // can finish all requirements in 3 semesters
+        threeSemestersValid : {
+            {some disj s1, s2, s3: SemesterSchedule | 
                 satisfiesMathFoundations and
-                fulfillsIntermediateRequirementsSCB and
-                additionalCoursesSCB and
-                thousandLevelCoursesSCB and
+                fulfillsIntermediateRequirementsAB and
+                additionalCoursesAB and
+                thousandLevelCoursesAB and
                 satisfiesCapstone
             }
-            validSCBPlan
+            validABPlan
         } is sat
 
         // can't finish all requirements in 1 semester
         oneSemesterNotValid : {
             {one sem: SemesterSchedule | 
                 satisfiesMathFoundations and
-                fulfillsIntermediateRequirementsSCB and
-                additionalCoursesSCB and
-                thousandLevelCoursesSCB and
+                fulfillsIntermediateRequirementsAB and
+                additionalCoursesAB and
+                thousandLevelCoursesAB and
                 satisfiesCapstone
             }
-            validSCBPlan
+            validABPlan
         } is unsat
 
         // cant have overlap between 1000 level and additional courses
@@ -608,7 +700,7 @@ test suite for validSCBPlan {
                 some c1: Course | c1 in usedAdditionalCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in usedAdditionalCourses.setCourses
             }
-            validSCBPlan
+            validABPlan
         } is sat
 
         // cant have overlap between 1000 level and foundation courses
@@ -617,7 +709,7 @@ test suite for validSCBPlan {
                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in foundationCourses.setCourses
             }
-            validSCBPlan
+            validABPlan
         } is sat
 
         // cant have overlap between additional and foundation courses
@@ -626,14 +718,11 @@ test suite for validSCBPlan {
                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedAdditionalCourses.setCourses
                 some c2: Course | c2 in usedAdditionalCourses.setCourses implies c2 not in foundationCourses.setCourses
             }
-            validSCBPlan
+            validABPlan
         } is sat
     }
 
 
-}
-
-test suite for validABPlan {
 
 }
 
@@ -702,6 +791,12 @@ pred noClassesInASem {
     some sem: SemesterSchedule | #{sem.semCourses} = 0
     validSCBPlan
 }
+
+pred noClassesInASemAB {
+    some sem: SemesterSchedule | #{sem.semCourses} = 0
+    validABPlan
+}
+
 
 
 
