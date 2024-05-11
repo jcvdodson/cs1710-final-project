@@ -474,9 +474,9 @@ pred validABPlan {
 }
 
 run {
-    validABPlan
+    validSCBPlan
     // validABPlan // uncomment this line to run the AB plan and comment out the SCB plan
-    finishBySem[3]
+    finishBySem[8]
     // includeCourse[cs1710]
 } for exactly 8 SemesterSchedule, 8 Int
 
