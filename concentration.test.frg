@@ -338,7 +338,6 @@ test suite for fulfillsIntermediateRequirements {
             }
 
             establishPrerequisites
-            // fulfillsAllCoursePrereqs
             fulfillsIntermediateRequirementsSCB
         } is unsat
     }    
@@ -638,6 +637,66 @@ test suite for validSCBPlan {
             validSCBPlan
         } is sat
 
+        // can't take class and its prerequisite in the same semester
+        noPrereqAndCourseNotValid : {
+            some sem: SemesterSchedule | {
+                some c1: Course | c1 in sem.semCourses and {
+                    some c2 : c1.prerequisites | c2 in sem.semCourses
+                }
+            }
+            validSCBPlan
+        } is unsat
+
+        // can't take class without its prereq
+        noCourseWithoutPrereqNotValid : {
+            some disj sem1, sem2: SemesterSchedule | {
+                some c1: Course | c1 in sem1.semCourses and {
+                    some c2 : c1.prerequisites | c2 not in sem2.semCourses and sem1.semNumber > sem2.semNumber
+                }
+            }
+            validSCBPlan
+        } for exactly 2 SemesterSchedule is unsat
+
+
+        // however you can take SOME class in a later semester after its prereq
+        prereqBeforeCourseValid : {
+        
+            // for all semesters
+            all semSched: SemesterSchedule | {
+                // for some in that semester
+                some course: semSched.semCourses | {
+                    // for all prerequisite sets of that course
+                    all prereq: course.prerequisites | {
+                        // we must have taken one course in the set of prerequisites in some earlier semester
+                        some earlierSemSchedule: SemesterSchedule | {
+                            some prereqCourse: prereq.courses | {
+                                prereqCourse in earlierSemSchedule.semCourses
+                                earlierSemSchedule.semNumber < semSched.semNumber
+                            }
+                        }
+                    }
+                }
+            }
+
+            
+            validSCBPlan
+        } for exactly 8 SemesterSchedule is sat
+
+        // capstone must be taken in the last two semesters
+        noCapstoneInLastTwoNotValid : {
+            {no disj s1, s2: SemesterSchedule | 
+                satisfiesCapstone and s1.semNumber = 6 and s2.semNumber = 7}
+            validSCBPlan
+        } for exactly 8 SemesterSchedule is unsat
+
+        // need minimum of 5 1000 level courses used and 2 additional courses (we don't add linear or cs320 to sets) used
+        minCoursesValid : {
+                
+            #{usedThousandLevelCourses.setCourses} >= 5
+            #{usedAdditionalCourses.setCourses} >= 2
+            validSCBPlan
+        } is sat
+
     }
 }
 
@@ -723,6 +782,71 @@ test suite for validABPlan {
                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedAdditionalCourses.setCourses
                 some c2: Course | c2 in usedAdditionalCourses.setCourses implies c2 not in foundationCourses.setCourses
             }
+            validABPlan
+        } is sat
+
+        // can't take class and its prerequisite in the same semester
+        noPrereqAndCourseNotValidAB : {
+            some sem: SemesterSchedule | {
+                some c1: Course | c1 in sem.semCourses and {
+                    some c2 : c1.prerequisites | c2 in sem.semCourses
+                }
+            }
+            validABPlan
+        } is unsat
+
+        // can't take class without its prereq
+        noCourseWithoutPrereqNotValidAB : {
+            some disj sem1, sem2: SemesterSchedule | {
+                some c1: Course | c1 in sem1.semCourses and {
+                    some c2 : c1.prerequisites | c2 not in sem2.semCourses and sem1.semNumber > sem2.semNumber
+                }
+            }
+            validABPlan
+        } for exactly 2 SemesterSchedule is unsat
+
+        // however you can take SOME class in a later semester after its prereq
+        prereqBeforeCourseValidAB : {
+        
+            // for all semesters
+            all semSched: SemesterSchedule | {
+                // for some in that semester
+                some course: semSched.semCourses | {
+                    // for all prerequisite sets of that course
+                    all prereq: course.prerequisites | {
+                        // we must have taken one course in the set of prerequisites in some earlier semester
+                        some earlierSemSchedule: SemesterSchedule | {
+                            some prereqCourse: prereq.courses | {
+                                prereqCourse in earlierSemSchedule.semCourses
+                                earlierSemSchedule.semNumber < semSched.semNumber
+                            }
+                        }
+                    }
+                }
+            }
+
+            
+            validABPlan
+        } for exactly 8 SemesterSchedule is sat
+
+        // capstone must be taken in the last two semesters
+        noCapstoneInLastTwoNotValidAB : {
+            {no disj s1, s2: SemesterSchedule | 
+                satisfiesCapstone and s1.semNumber = 6 and s2.semNumber = 7}
+            validABPlan
+        } for exactly 8 SemesterSchedule is unsat
+
+        // math100 is not necessary for AB (valid concentration can be formed without it)
+        noMath100ValidAB : {
+            {no sem: SemesterSchedule | math0100 in sem.semCourses}
+            validABPlan
+        } is sat
+
+        // minimum of 2 1000 level courses used and 1 additional courses (we don't add linear or cs320 to sets) used
+        minCoursesValidAB : {
+                
+            #{usedThousandLevelCourses.setCourses} >= 2
+            #{usedAdditionalCourses.setCourses} >= 1
             validABPlan
         } is sat
     }
