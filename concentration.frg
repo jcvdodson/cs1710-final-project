@@ -248,23 +248,23 @@ pred hasAlgoTheoryCourse {
     some semSched: SemesterSchedule | {
         some {semSched.semCourses & algoTheoryCourses.setCourses}
         
-        // cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses or
-        // cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses or
-        // cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
+        cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses or
+        cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses or
+        cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
 
-        let algTheoryCoursesInSched = semSched.semCourses & algoTheoryCourses.setCourses
+        // let algTheoryCoursesInSched = semSched.semCourses & algoTheoryCourses.setCourses
         
-        {cs1010 in algTheoryCoursesInSched => {
-            cs1010 in foundationCourses.setCourses
-            no cs1550 + cs1570 & foundationCourses.setCourses
-        }
-        else cs1550 in algTheoryCoursesInSched => {
-            cs1550 in foundationCourses.setCourses
-            no cs1570 & foundationCourses.setCourses
-        }
-        else cs1570 in algTheoryCoursesInSched => {
-            cs1570 in foundationCourses.setCourses
-        }}
+        // {cs1010 in algTheoryCoursesInSched => {
+        //     cs1010 in foundationCourses.setCourses
+        //     no cs1550 + cs1570 & foundationCourses.setCourses
+        // }
+        // else cs1550 in algTheoryCoursesInSched => {
+        //     cs1550 in foundationCourses.setCourses
+        //     no cs1570 & foundationCourses.setCourses
+        // }
+        // else cs1570 in algTheoryCoursesInSched => {
+        //     cs1570 in foundationCourses.setCourses
+        // }}
 
     }
 
