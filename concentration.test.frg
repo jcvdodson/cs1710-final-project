@@ -325,6 +325,22 @@ test suite for fulfillsIntermediateRequirements {
             fulfillsAllCoursePrereqs
             fulfillsIntermediateRequirementsAB
         } is sat
+
+        // only one of the courses gets 1000 level course gets added to foundation courses
+        // oneCourseFromEachAreaInFoundationsValidSCB : {
+        //     some sem1 : SemesterSchedule | {
+        //         some c1 : AICourses.setCourses | {
+        //             c1 = cs1410 and c1 in sem1.semCourses => cs1410 in foundationCourses.setCourses and no {cs1420 + cs1430 + cs1460 + cs1470 + cs1951A + cs1952Q} & foundationCourses.setCourses} 
+        //         some c2 : algoTheoryCourses.setCourses | {
+        //             c2 = cs1010 and c2 in sem1.semCourses => cs1010 in foundationCourses.setCourses and some {cs1550 + cs1570} & foundationCourses.setCourses}
+        //         cs0300 in sem1.semCourses or cs0330 in sem1.semCourses
+
+        //     }
+
+        //     // establishPrerequisites
+        //     // fulfillsAllCoursePrereqs
+        //     fulfillsIntermediateRequirementsSCB
+        // } is unsat
     }    
     
 }
@@ -622,36 +638,6 @@ test suite for validSCBPlan {
             validSCBPlan
         } is sat
 
-        // miniumum 15 total courses
-        // minFifteenCoursesValid : {
-        //     some disj s1, s2, s3, s4: SemesterSchedule |{
-        //         cs0111 in s1.semCourses
-        //         math0100 in s1.semCourses
-                
-
-        //         cs0200 in s2.semCourses
-        //         cs0220 in s2.semCourses
-        //         math0520 in s2.semCourses
-        //         cs1460 in s2.semCourses
-        //         cs1550 in s2.semCourses
-                
-
-        //         cs0330 in s3.semCourses
-        //         cs0410 in s3.semCourses
-        //         cs1260 in s3.semCourses
-
-
-
-        //         cs0320 in s4.semCourses
-        //         cs0500 in s4.semCourses
-        //         cs1420 in s4.semCourses
-        //         cs1380 in s4.semCourses
-        //         cs1710 in s4.semCourses
-
-        //         s1.semNumber < s2.semNumber and s2.semNumber < s3.semNumber and s3.semNumber < s4.semNumber
-        //     }
-        //     validSCBPlan
-        // } is sat
     }
 }
 
