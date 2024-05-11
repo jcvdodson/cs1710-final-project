@@ -2,7 +2,7 @@
 
 open "concentration.frg"
 
-// IMPORTANT: you may see warnings stating that the some following tests do no not 
+// IMPORTANT: you may see warnings when you run our tests stating that the some following tests do no not 
 // reference their respective predicate, this is because those predicates takes in an argument
 // depending on whether we are specifiying for the SCB or AB concentration.
 // We were having some trouble writing assert statements for some predicate so
@@ -13,128 +13,128 @@ open "concentration.frg"
 
 
 
-// test suite for wellformedSchedule {
-//     // eight semester constraint
-//     assert eightSemesters is necessary for wellformedSchedule
+test suite for wellformedSchedule {
+    // eight semester constraint
+    assert eightSemesters is necessary for wellformedSchedule
 
-//     // semesters are assigned different numbers
-//     assert disjointSemesters is necessary for wellformedSchedule
+    // semesters are assigned different numbers
+    assert disjointSemesters is necessary for wellformedSchedule
 
-//     // can take max 5 courses per semester
-//     assert maxFiveCourses is necessary for wellformedSchedule
+    // can take max 5 courses per semester
+    assert maxFiveCourses is necessary for wellformedSchedule
 
-//     // cannot take the same course twice
-//     assert cantTakeSameCourseTwice is necessary for wellformedSchedule
+    // cannot take the same course twice
+    assert cantTakeSameCourseTwice is necessary for wellformedSchedule
 
-//     // courses must be in the proper season when they are offered
-//     assert coursesInProperSeason is necessary for wellformedSchedule
+    // courses must be in the proper season when they are offered
+    assert coursesInProperSeason is necessary for wellformedSchedule
 
-//     // it is possible to have no classes in all semester
-//     assert noClasses is sufficient for wellformedSchedule
+    // it is possible to have no classes in all semester
+    assert noClasses is sufficient for wellformedSchedule
 
-//     test expect {
-//         // cant have more than 5 courses in a semester
-//         sixClassesNotValid : {
-//             some sem : SemesterSchedule | #{sem.semCourses} = 6 and wellformedSchedule
-//         } is unsat
-//     } 
+    test expect {
+        // cant have more than 5 courses in a semester
+        sixClassesNotValid : {
+            some sem : SemesterSchedule | #{sem.semCourses} = 6 and wellformedSchedule
+        } is unsat
+    } 
 
-// }
+}
 
-// test suite for fulfillsIntroSequence {
-//     test expect {
-//         // going from 11 to 200 is valid
-//         validIntroSequence11to200 : {
-//             {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-//             eightSemesters
-//             disjointSemesters
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is sat
+test suite for fulfillsIntroSequence {
+    test expect {
+        // going from 11 to 200 is valid
+        validIntroSequence11to200 : {
+            {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
+            eightSemesters
+            disjointSemesters
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is sat
 
-//         // going from just 11 to 12 is invalid
-//         invalidIntroSequence11to12 : {
-//             {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0112 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-//             {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
-//             eightSemesters
-//             disjointSemesters
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is unsat
+        // going from just 11 to 12 is invalid
+        invalidIntroSequence11to12 : {
+            {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0112 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
+            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
+            eightSemesters
+            disjointSemesters
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is unsat
 
-//         // going from 11 to 15 to 200 is valid
-//         validIntroSequence11to15to200 : {
-//             {some disj sem1, sem2, sem3: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and cs0200 in sem3.semCourses and sem1.semNumber < sem2.semNumber and sem2.semNumber < sem3.semNumber}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is sat
+        // going from 11 to 15 to 200 is valid
+        validIntroSequence11to15to200 : {
+            {some disj sem1, sem2, sem3: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and cs0200 in sem3.semCourses and sem1.semNumber < sem2.semNumber and sem2.semNumber < sem3.semNumber}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is sat
 
-//         // going from 11 to 15 to 12 is invalid
-//         invalidIntroSequence11to15to12 : {
-//             {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-//             {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is unsat
+        // going from 11 to 15 to 12 is invalid
+        invalidIntroSequence11to15to12 : {
+            {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
+            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is unsat
 
-//         // going from 11 to 15 to 15 to 200 is invalid, not wellformed schedule
-//         invalidIntroSequence11to15to15to200 : {
-//             {some disj sem1, sem2, sem3, sem4: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and cs0150 in sem3.semCourses and cs0200 in sem4.semCourses and sem1.semNumber < sem2.semNumber and sem2.semNumber < sem3.semNumber and sem3.semNumber < sem4.semNumber}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//             wellformedSchedule
-//         } is unsat
+        // going from 11 to 15 to 15 to 200 is invalid, not wellformed schedule
+        invalidIntroSequence11to15to15to200 : {
+            {some disj sem1, sem2, sem3, sem4: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and cs0150 in sem3.semCourses and cs0200 in sem4.semCourses and sem1.semNumber < sem2.semNumber and sem2.semNumber < sem3.semNumber and sem3.semNumber < sem4.semNumber}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+            wellformedSchedule
+        } is unsat
 
-//         // going from 15 to 200 is valid
-//         validIntroSequence15to200 : {
-//             {some disj sem1, sem2: SemesterSchedule | cs0150 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is sat
+        // going from 15 to 200 is valid
+        validIntroSequence15to200 : {
+            {some disj sem1, sem2: SemesterSchedule | cs0150 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is sat
 
-//         // going from 17 to 200 is valid
-//         validIntroSequence17to200 : {
-//             {some disj sem1, sem2: SemesterSchedule | cs0170 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsIntroSequence
-//         } is sat
-//     }
-// }
+        // going from 17 to 200 is valid
+        validIntroSequence17to200 : {
+            {some disj sem1, sem2: SemesterSchedule | cs0170 in sem1.semCourses and cs0200 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is sat
+    }
+}
 
-// test suite for fulfillsCalcRequirement {
-//     test expect {
-//         // math 100 is necessary for fulfillsCalcRequirement
-//         noCalcNotValidSCB : {
-//             {no sem: SemesterSchedule | math0100 in sem.semCourses}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsCalcRequirement[0, 0]
-//         } is unsat
+test suite for fulfillsCalcRequirement {
+    test expect {
+        // math 100 is necessary for fulfillsCalcRequirement
+        noCalcNotValidSCB : {
+            {no sem: SemesterSchedule | math0100 in sem.semCourses}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsCalcRequirement[0, 0]
+        } is unsat
 
-//         // don't need to take any calc course if AB
-//         noCalcABValid : {
-//             {no sem: SemesterSchedule | some {sem.semCourses & calcCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsCalcRequirement[1, 0]
-//         } is sat
+        // don't need to take any calc course if AB
+        noCalcABValid : {
+            {no sem: SemesterSchedule | some {sem.semCourses & calcCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsCalcRequirement[1, 0]
+        } is sat
         
-//         // don't need to take any calc course if have HS credit
-//         noCalcHSCreditValid : {
-//             {no sem: SemesterSchedule | some {sem.semCourses & calcCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             fulfillsCalcRequirement[0, 1]
-//         } is sat
-//     }
-// }
+        // don't need to take any calc course if have HS credit
+        noCalcHSCreditValid : {
+            {no sem: SemesterSchedule | some {sem.semCourses & calcCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsCalcRequirement[0, 1]
+        } is sat
+    }
+}
 
 pred hasOnlyCS0300 {
     some sem: SemesterSchedule | cs0300 in sem.semCourses
@@ -324,88 +324,80 @@ pred additionalCoursesAB {
     someAdditionalCourses[2]
 }
 
-// pred someAdditionalCourses[numAdditional: Int] {
-//     // must take the indicated number of additional courses
-//     #{sem: SemesterSchedule, course: Course | 
-//         course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses and
-//         course in usedAdditionalCourses.setCourses and course not in usedThousandLevelCourses.setCourses
-//     } >= numAdditional
-// }
+test suite for someAdditionalCourses {
 
-// test suite for someAdditionalCourses {
+    // additional courses must be taken to fulfill the CS requirement
+    test expect {
+        noAdditionalCoursesNotValidSCB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesSCB
+        } is unsat
 
-//     // additional courses must be taken to fulfill the CS requirement
-//     test expect {
-//         noAdditionalCoursesNotValidSCB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesSCB
-//         } is unsat
-
-//         noAdditionalCoursesNotValidAB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesAB
-//         } is unsat
+        noAdditionalCoursesNotValidAB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) - foundationCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesAB
+        } is unsat
 
         
 
-//         // some course is in both additional and foundation courses is not valid
-//         additionalAndFoundationNotValidSCB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesSCB
-//         } is sat
+        // some course is in both additional and foundation courses is not valid
+        additionalAndFoundationNotValidSCB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesSCB
+        } is sat
 
-//         additionalAndFoundationNotValidAB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesAB
-//         } is sat
+        additionalAndFoundationNotValidAB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & foundationCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesAB
+        } is sat
 
-//         // additional course can't be an already utilized 1000 level course
-//         additionalAndUsedThousandNotValidSCB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesSCB
-//         } is sat
+        // additional course can't be an already utilized 1000 level course
+        additionalAndUsedThousandNotValidSCB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesSCB
+        } is sat
 
-//         additionalAndUsedThousandNotValidAB : {
-//             {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesAB
-//         } is sat
+        additionalAndUsedThousandNotValidAB : {
+            {no sem: SemesterSchedule | some {(sem.semCourses & additionalCourses.setCourses) & usedThousandLevelCourses.setCourses}}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesAB
+        } is sat
 
-//         // no limit on the number of additional courses you can take
-//         // also making sure this predicate does not constrain the number of classes in a semester
-//         allAdditionalCoursesValidSCB : {
-//             some  disj sem1, sem2 : SemesterSchedule | {
-//                 some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
-//             }
+        // no limit on the number of additional courses you can take
+        // also making sure this predicate does not constrain the number of classes in a semester
+        allAdditionalCoursesValidSCB : {
+            some  disj sem1, sem2 : SemesterSchedule | {
+                some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+            }
 
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesSCB
-//         } is sat
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesSCB
+        } is sat
 
-//         allAdditionalCoursesValidAB : {
-//             some  disj sem1, sem2 : SemesterSchedule | {
-//                 some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
-//             }
+        allAdditionalCoursesValidAB : {
+            some  disj sem1, sem2 : SemesterSchedule | {
+                some disj c1, c2, c3, c4, c5, c6, c7 : additionalCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+            }
 
-//             establishPrerequisites
-//             fulfillsAllCoursePrereqs
-//             additionalCoursesAB
-//         } is sat
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            additionalCoursesAB
+        } is sat
 
-//     }
-// }
+    }
+}
 
 pred thousandLevelCoursesSCB {
     atLeastSomeThousandLevel[5]
@@ -415,63 +407,63 @@ pred thousandLevelCoursesAB {
     atLeastSomeThousandLevel[2]
 }
 
-// test suite for atLeastSomeThousandLevel {
+test suite for atLeastSomeThousandLevel {
     
-//         // must take at least the indicated number of 1000 level courses
-//         test expect {
-//             noThousandLevelNotValidSCB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesSCB
-//             } is unsat
+        // must take at least the indicated number of 1000 level courses
+        test expect {
+            noThousandLevelNotValidSCB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesSCB
+            } is unsat
     
-//             noThousandLevelNotValidAB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesAB
-//             } is unsat
+            noThousandLevelNotValidAB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) - foundationCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesAB
+            } is unsat
     
-//             // some course is in both 1000 level and foundation courses is not valid
-//             thousandLevelAndFoundationNotValidSCB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesSCB
-//             } is sat
+            // some course is in both 1000 level and foundation courses is not valid
+            thousandLevelAndFoundationNotValidSCB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesSCB
+            } is sat
     
-//             thousandLevelAndFoundationNotValidAB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesAB
-//             } is sat
+            thousandLevelAndFoundationNotValidAB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & foundationCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesAB
+            } is sat
     
-//             // 1000 level course can't be an already utilized additional course
-//             thousandLevelAndUsedAdditionalNotValidSCB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesSCB
-//             } is sat
+            // 1000 level course can't be an already utilized additional course
+            thousandLevelAndUsedAdditionalNotValidSCB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesSCB
+            } is sat
     
-//             thousandLevelAndUsedAdditionalNotValidAB : {
-//                 {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
-//                 establishPrerequisites
-//                 fulfillsAllCoursePrereqs
-//                 thousandLevelCoursesAB
-//             } is sat
+            thousandLevelAndUsedAdditionalNotValidAB : {
+                {no sem: SemesterSchedule | some {(sem.semCourses & thousandLevelCourses.setCourses) & usedAdditionalCourses.setCourses}}
+                establishPrerequisites
+                fulfillsAllCoursePrereqs
+                thousandLevelCoursesAB
+            } is sat
     
-//             // no limit on the number of 1000 level courses you can take
-//             // also making sure this predicate does not constrain the number of classes in a semester
-//             allThousandLevelCoursesValidSCB : {
-//                 some  disj sem1, sem2 : SemesterSchedule | {
-//                     some disj c1, c2, c3, c4, c5, c6, c7 : thousandLevelCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
-//                 }
-//             } is sat
-//         }
-// }
+            // no limit on the number of 1000 level courses you can take
+            // also making sure this predicate does not constrain the number of classes in a semester
+            allThousandLevelCoursesValidSCB : {
+                some  disj sem1, sem2 : SemesterSchedule | {
+                    some disj c1, c2, c3, c4, c5, c6, c7 : thousandLevelCourses.setCourses | c1 in sem2.semCourses and c2 in sem1.semCourses and c3 in sem2.semCourses and c4 in sem2.semCourses and c5 in sem2.semCourses and c6 in sem2.semCourses and c7 in sem2.semCourses
+                }
+            } is sat
+        }
+}
 
 
 pred noEquivalentCoursesAllowed {
