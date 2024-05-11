@@ -236,13 +236,33 @@ pred establishPrerequisites {
 
 pred hasAlgoTheoryCourse {
     // has some algorithms or theory course (part of the new requirements)
+    // only one should be in foundation courses even if all are taken
     some semSched: SemesterSchedule | {
         some {semSched.semCourses & algoTheoryCourses.setCourses}
-        cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses
-        cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses
-        cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
+        
+        // cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses or
+        // cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses or
+        // cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
+
+        let algTheoryCoursesInSched = semSched.semCourses & algoTheoryCourses.setCourses
+        
+        {cs1010 in algTheoryCoursesInSched => {
+            cs1010 in foundationCourses.setCourses
+            no cs1550 + cs1570 & foundationCourses.setCourses
+        }
+        else cs1550 in algTheoryCoursesInSched => {
+            cs1550 in foundationCourses.setCourses
+            no cs1570 & foundationCourses.setCourses
+        }
+        else cs1570 in algTheoryCoursesInSched => {
+            cs1570 in foundationCourses.setCourses
+        }}
+
     }
+
+    
 }
+
 
 pred hasAICourse {
     // has some AI course (part of the new requirements)
@@ -368,7 +388,7 @@ pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
 // fulling the capstone requirement means that you take one of these courses in your 7th or 8th semester
 pred fullfillsCapstoneRequirement {
     some semSched: SemesterSchedule | {
-        semSched.semNumber = 7 or semSched.semNumber = 8
+        semSched.semNumber = 6 or semSched.semNumber = 7
         and some {semSched.semCourses & capstoneCourses.setCourses}
     } 
 }
@@ -423,6 +443,7 @@ pred validSCBPlan {
     fulfillsAllCoursePrereqs
     wellformedSchedule
     noEquivalentTaken
+    fullfillsCapstoneRequirement
 }
 
 pred validABPlan {
@@ -435,12 +456,14 @@ pred validABPlan {
     fulfillsAllCoursePrereqs
     wellformedSchedule
     noEquivalentTaken
+    fullfillsCapstoneRequirement
 }
 
 run {
     validSCBPlan
+    // validABPlan // uncomment this line to run the AB plan and comment out the SCB plan
     finishBySem[8]
-} for exactly 8 SemesterSchedule, 5 Int
+} for exactly 8 SemesterSchedule, 8 Int
 
 
 /* TESTING:
