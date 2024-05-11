@@ -233,7 +233,7 @@ pred establishPrerequisites {
 
     // define sets of courses for various categories
     fallCourses.setCourses = cs0111 + cs0150 + cs0170 + cs0190 + cs0320 + cs0330 + cs0410 + cs1010 + cs1260 + cs1410 + cs1430 + cs1570 + math0100 + math0180 + math0200 + apma1650 + apma1655 + math0520 + math0540
-    springCourses.setCourses = cs0112 + cs0200 + cs0220 + cs0320 + cs0300 + cs0500 + cs1300 + cs1380 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1951A + cs1952Q + math0520 + math0540 + math0100 + math0180 + apma1650 + apma1655
+    springCourses.setCourses = cs0112 + cs0200 + cs0220 + cs0320 + cs0300 + cs0500 + cs1300 + cs1380 + cs1420 + cs1430 + cs1460 + cs1470 + cs1550 + cs1710 + cs1951A + cs1952Q + math0520 + math0540 + math0100 + math0180 + apma1650 + apma1655
     capstoneCourses.setCourses = cs1260 + cs1300 + cs1380 + cs1410 + cs1420
     AICourses.setCourses = cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1951A + cs1952Q
     algoTheoryCourses.setCourses = cs0500 + cs1010 + cs1550 + cs1570
@@ -474,9 +474,10 @@ pred validABPlan {
 }
 
 run {
-    validSCBPlan
+    validABPlan
     // validABPlan // uncomment this line to run the AB plan and comment out the SCB plan
-    finishBySem[8]
+    finishBySem[3]
+    // includeCourse[cs1710]
 } for exactly 8 SemesterSchedule, 8 Int
 
 
