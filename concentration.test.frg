@@ -10,9 +10,6 @@ open "concentration.frg"
 // with the argument passed in 
 // FOR example: the hasSCBSysCourse and hasABSysCourse predicates
 
-
-
-
 test suite for wellformedSchedule {
     // eight semester constraint
     assert eightSemesters is necessary for wellformedSchedule
@@ -139,18 +136,24 @@ test suite for fulfillsCalcRequirement {
 pred hasOnlyCS0300 {
     some sem: SemesterSchedule | cs0300 in sem.semCourses
     cs0300 in foundationCourses.setCourses
+    cs0330 not in foundationCourses.setCourses
+    cs0320 not in foundationCourses.setCourses
     no sem: SemesterSchedule | {cs0330 in sem.semCourses or cs0320 in sem.semCourses}
 }
 
 pred hasOnlyCS0330 {
     some sem: SemesterSchedule | cs0330 in sem.semCourses
     cs0330 in foundationCourses.setCourses
+    cs0300 not in foundationCourses.setCourses
+    cs0320 not in foundationCourses.setCourses
     no sem: SemesterSchedule | {cs0300 in sem.semCourses or cs0320 in sem.semCourses}
 }
 
 pred hasOnlyCS0320 {
     some sem: SemesterSchedule | cs0320 in sem.semCourses
     cs0320 in foundationCourses.setCourses
+    cs0300 not in foundationCourses.setCourses
+    cs0330 not in foundationCourses.setCourses
     no sem: SemesterSchedule | {cs0300 in sem.semCourses or cs0330 in sem.semCourses}
 }
 
@@ -163,9 +166,12 @@ pred hasCS300OrCS330 {
 
 pred hasCS300OrCS0320OrCS330 {
     some sem: SemesterSchedule | {
-        { cs0300 in sem.semCourses and cs0300 in foundationCourses.setCourses } or
-        { cs0320 in sem.semCourses and cs0320 in foundationCourses.setCourses } or
-        { cs0330 in sem.semCourses and cs0330 in foundationCourses.setCourses }
+        { cs0300 in sem.semCourses and cs0300 in foundationCourses.setCourses 
+            and cs0320 not in foundationCourses.setCourses and cs0330 not in foundationCourses.setCourses } or
+        { cs0320 in sem.semCourses and cs0320 in foundationCourses.setCourses 
+            and cs0300 not in foundationCourses.setCourses and cs0330 not in foundationCourses.setCourses} or
+        { cs0330 in sem.semCourses and cs0330 in foundationCourses.setCourses 
+            and cs0320 not in foundationCourses.setCourses and cs0300 not in foundationCourses.setCourses }
     }
 }
 
@@ -313,7 +319,6 @@ test suite for fulfillsIntermediateRequirements {
             fulfillsIntermediateRequirementsAB
         } is sat
     }    
-    
 }
 
 pred additionalCoursesSCB {
@@ -325,7 +330,6 @@ pred additionalCoursesAB {
 }
 
 test suite for someAdditionalCourses {
-
     // additional courses must be taken to fulfill the CS requirement
     test expect {
         noAdditionalCoursesNotValidSCB : {
@@ -341,8 +345,6 @@ test suite for someAdditionalCourses {
             fulfillsAllCoursePrereqs
             additionalCoursesAB
         } is unsat
-
-        
 
         // some course is in both additional and foundation courses is not valid
         additionalAndFoundationNotValidSCB : {
@@ -408,7 +410,6 @@ pred thousandLevelCoursesAB {
 }
 
 test suite for atLeastSomeThousandLevel {
-    
         // must take at least the indicated number of 1000 level courses
         test expect {
             noThousandLevelNotValidSCB : {
@@ -465,7 +466,6 @@ test suite for atLeastSomeThousandLevel {
         }
 }
 
-
 pred noEquivalentCoursesAllowed {
     no semSched1, semSched2: SemesterSchedule | 
         {some course: semSched1.semCourses | 
@@ -475,7 +475,6 @@ pred noEquivalentCoursesAllowed {
 test suite for noEquivalentTaken {
     assert noEquivalentCoursesAllowed is necessary for noEquivalentTaken
 
-    
     test expect {
         // can't have equivalent courses in the same semester
         equivalentCoursesNotValid : {
@@ -516,10 +515,7 @@ test suite for noEquivalentTaken {
 
 }
 
-
-
 test suite for finishBySem {
-    
     test expect {
         finishBySemValid : {
             some disj c1, c2: Course, s1, s2, s3: SemesterSchedule | 
@@ -528,11 +524,18 @@ test suite for finishBySem {
                 s3.semNumber = 2 and no s3.semCourses and
                 finishBySem[2]
         } is sat
+
+        doesNotFinishBySem : {
+            some disj c1, c2, c3: Course, s1, s2, s3: SemesterSchedule | 
+                s1.semNumber = 0 and c1 in s1.semCourses and
+                s2.semNumber = 1 and c2 in s2.semCourses and
+                s3.semNumber = 2 and c3 in s3.semCourses and
+                wellformedSchedule
+                finishBySem[2]
+        } is unsat
     } 
 
 }
-
-
 
 test suite for validSCBPlan {
     // math100 needs to be taken
@@ -570,7 +573,6 @@ test suite for validSCBPlan {
     assert noClassesInASem is sufficient for validSCBPlan for 8 SemesterSchedule
 
     test expect {
-        
         // can finish all requirements in 4 semesters
         fourSemestersValid : {
             {some disj s1, s2, s3, s4: SemesterSchedule | 
@@ -652,11 +654,7 @@ test suite for validSCBPlan {
         //     }
         //     validSCBPlan
         // } is sat
-
-
     }
-
-
 }
 
 test suite for validABPlan {
@@ -693,7 +691,6 @@ test suite for validABPlan {
     assert noClassesInASemAB is sufficient for validABPlan for 8 SemesterSchedule
 
     test expect {
-        
         // can finish all requirements in 3 semesters
         threeSemestersValid : {
             {some disj s1, s2, s3: SemesterSchedule | 
@@ -748,8 +745,6 @@ test suite for validABPlan {
 
 }
 
-
-
 -----------PREDICATES for TESTING----------------
 
 pred satisfiesCapstone {
@@ -769,8 +764,6 @@ pred satisfiesMathFoundations {
     }
 
 }
-
-
 
 pred hasMath100 {
     some sem: SemesterSchedule | math0100 in sem.semCourses
@@ -818,10 +811,3 @@ pred noClassesInASemAB {
     some sem: SemesterSchedule | #{sem.semCourses} = 0
     validABPlan
 }
-
-
-
-
-
-
-

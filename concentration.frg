@@ -261,27 +261,23 @@ pred hasAlgoTheoryCourse {
     some semSched: SemesterSchedule | {
         some {semSched.semCourses & algoTheoryCourses.setCourses}
         
-        cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses or
-        cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses or
-        cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
+        // cs1010 in semSched.semCourses => cs1010 in foundationCourses.setCourses or
+        // cs1550 in semSched.semCourses => cs1550 in foundationCourses.setCourses or
+        // cs1570 in semSched.semCourses => cs1570 in foundationCourses.setCourses
 
-        // let algTheoryCoursesInSched = semSched.semCourses & algoTheoryCourses.setCourses
-        
-        // {cs1010 in algTheoryCoursesInSched => {
-        //     cs1010 in foundationCourses.setCourses
-        //     no cs1550 + cs1570 & foundationCourses.setCourses
-        // }
-        // else cs1550 in algTheoryCoursesInSched => {
-        //     cs1550 in foundationCourses.setCourses
-        //     no cs1570 & foundationCourses.setCourses
-        // }
-        // else cs1570 in algTheoryCoursesInSched => {
-        //     cs1570 in foundationCourses.setCourses
-        // }}
+        {cs1010 in semSched.semCourses => {
+            cs1010 in foundationCourses.setCourses
+            no {cs1550 + cs1570} & foundationCourses.setCourses
+        }
+        else cs1550 in semSched.semCourses => {
+            cs1550 in foundationCourses.setCourses
+            no {cs1010 + cs1570} & foundationCourses.setCourses
+        }
+        else cs1570 in semSched.semCourses => {
+            {cs1550 + cs1010} in foundationCourses.setCourses
+        }}
 
     }
-
-    
 }
 
 
@@ -289,13 +285,35 @@ pred hasAICourse {
     // has some AI course (part of the new requirements)
     some semSched: SemesterSchedule | {
         some {semSched.semCourses & AICourses.setCourses}
-        cs1410 in semSched.semCourses => cs1410 in foundationCourses.setCourses
-        cs1420 in semSched.semCourses => cs1420 in foundationCourses.setCourses
-        cs1430 in semSched.semCourses => cs1430 in foundationCourses.setCourses
-        cs1460 in semSched.semCourses => cs1460 in foundationCourses.setCourses
-        cs1470 in semSched.semCourses => cs1470 in foundationCourses.setCourses
-        cs1951A in semSched.semCourses => cs1951A in foundationCourses.setCourses
-        cs1952Q in semSched.semCourses => cs1952Q in foundationCourses.setCourses
+
+        {cs1410 in semSched.semCourses => {
+            cs1410 in foundationCourses.setCourses
+            no {cs1420 + cs1430 + cs1460 + cs1470 + cs1951A + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1420 in semSched.semCourses => {
+            cs1420 in foundationCourses.setCourses
+            no {cs1410 + cs1430 + cs1460 + cs1470 + cs1951A + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1430 in semSched.semCourses => {
+            cs1430 in foundationCourses.setCourses
+            no {cs1410 + cs1420 + cs1460 + cs1470 + cs1951A + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1460 in semSched.semCourses => {
+            cs1460 in foundationCourses.setCourses
+            no {cs1410 + cs1420 + cs1430 + cs1470 + cs1951A + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1470 in semSched.semCourses => {
+            cs1470 in foundationCourses.setCourses
+            no {cs1410 + cs1420 + cs1430 + cs1460 + cs1951A + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1951A in semSched.semCourses => {
+            cs1951A in foundationCourses.setCourses
+            no {cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1952Q} & foundationCourses.setCourses
+        }
+        else cs1952Q in semSched.semCourses => {
+            cs1952Q in foundationCourses.setCourses
+            no {cs1410 + cs1420 + cs1430 + cs1460 + cs1470 + cs1951A} & foundationCourses.setCourses
+        }}
     }
 }
 
@@ -305,9 +323,18 @@ pred hasSystemsCourse[isAB: Int] {
         (cs0300 in semSched.semCourses or cs0330 in semSched.semCourses)
         or (cs0320 in semSched.semCourses and isAB = 1)
 
-        cs0300 in semSched.semCourses => cs0300 in foundationCourses.setCourses
-        cs0330 in semSched.semCourses => cs0330 in foundationCourses.setCourses
-        cs0320 in semSched.semCourses => cs0320 in foundationCourses.setCourses
+        {cs0300 in semSched.semCourses => {
+            cs0300 in foundationCourses.setCourses
+            no {cs0330 + cs0320} & foundationCourses.setCourses
+        }
+        else cs0330 in semSched.semCourses => {
+            cs0330 in foundationCourses.setCourses
+            no {cs0300 + cs0320} & foundationCourses.setCourses
+        }
+        else cs0320 in semSched.semCourses => {
+            cs0320 in foundationCourses.setCourses
+            no {cs0300 + cs0330} & foundationCourses.setCourses
+        }}
     }
 }
 
