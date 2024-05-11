@@ -53,7 +53,7 @@ test suite for fulfillsIntroSequence {
         // going from just 11 to 12 is invalid
         invalidIntroSequence11to12 : {
             {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0112 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
+            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses or cs0190 in sem3.semCourses}            
             eightSemesters
             disjointSemesters
             establishPrerequisites
@@ -72,7 +72,7 @@ test suite for fulfillsIntroSequence {
         // going from 11 to 15 to 12 is invalid
         invalidIntroSequence11to15to12 : {
             {some disj sem1, sem2: SemesterSchedule | cs0111 in sem1.semCourses and cs0150 in sem2.semCourses and sem1.semNumber < sem2.semNumber}
-            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses}            
+            {no sem3: SemesterSchedule | cs0200 in sem3.semCourses or cs0190 in sem3.semCourses}            
             establishPrerequisites
             fulfillsAllCoursePrereqs
             fulfillsIntroSequence
