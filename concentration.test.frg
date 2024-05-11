@@ -622,6 +622,37 @@ test suite for validSCBPlan {
             validSCBPlan
         } is sat
 
+        // miniumum 15 total courses
+        // minFifteenCoursesValid : {
+        //     some disj s1, s2, s3, s4: SemesterSchedule |{
+        //         cs0111 in s1.semCourses
+        //         math0100 in s1.semCourses
+                
+
+        //         cs0200 in s2.semCourses
+        //         cs0220 in s2.semCourses
+        //         math0520 in s2.semCourses
+        //         cs1460 in s2.semCourses
+        //         cs1550 in s2.semCourses
+                
+
+        //         cs0330 in s3.semCourses
+        //         cs0410 in s3.semCourses
+        //         cs1260 in s3.semCourses
+
+
+
+        //         cs0320 in s4.semCourses
+        //         cs0500 in s4.semCourses
+        //         cs1420 in s4.semCourses
+        //         cs1380 in s4.semCourses
+        //         cs1710 in s4.semCourses
+
+        //         s1.semNumber < s2.semNumber and s2.semNumber < s3.semNumber and s3.semNumber < s4.semNumber
+        //     }
+        //     validSCBPlan
+        // } is sat
+
 
     }
 
@@ -676,7 +707,7 @@ test suite for validABPlan {
         } is sat
 
         // can't finish all requirements in 1 semester
-        oneSemesterNotValid : {
+        oneSemesterNotValidAB : {
             {one sem: SemesterSchedule | 
                 satisfiesMathFoundations and
                 fulfillsIntermediateRequirementsAB and
@@ -688,7 +719,7 @@ test suite for validABPlan {
         } is unsat
 
         // cant have overlap between 1000 level and additional courses
-        noOverlapThousandAndAdditionalNotValid : {
+        noOverlapThousandAndAdditionalNotValidAB : {
             some sem: SemesterSchedule | {
                 some c1: Course | c1 in usedAdditionalCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in usedAdditionalCourses.setCourses
@@ -697,7 +728,7 @@ test suite for validABPlan {
         } is sat
 
         // cant have overlap between 1000 level and foundation courses
-        noOverlapThousandAndFoundationNotValid : {
+        noOverlapThousandAndFoundationNotValidAB : {
             some sem: SemesterSchedule | {
                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedThousandLevelCourses.setCourses
                 some c2: Course | c2 in usedThousandLevelCourses.setCourses implies c2 not in foundationCourses.setCourses
@@ -706,7 +737,7 @@ test suite for validABPlan {
         } is sat
 
         // cant have overlap between additional and foundation courses
-        noOverlapAdditionalAndFoundationNotValid : {
+        noOverlapAdditionalAndFoundationNotValidAB : {
             some sem: SemesterSchedule | {
                 some c1: Course | c1 in foundationCourses.setCourses implies c1 not in usedAdditionalCourses.setCourses
                 some c2: Course | c2 in usedAdditionalCourses.setCourses implies c2 not in foundationCourses.setCourses
@@ -719,7 +750,7 @@ test suite for validABPlan {
 
 
 
-
+-----------PREDICATES for TESTING----------------
 
 pred satisfiesCapstone {
     some semSched: SemesterSchedule | {
