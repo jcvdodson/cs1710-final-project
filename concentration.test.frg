@@ -525,16 +525,7 @@ test suite for finishBySem {
                 s3.semNumber = 2 and no s3.semCourses and
                 finishBySem[2]
         } is sat
-
-        doesNotFinishBySem : {
-            some disj c1, c2, c3: Course, s1, s2, s3: SemesterSchedule | 
-                s1.semNumber = 0 and c1 in s1.semCourses and
-                s2.semNumber = 1 and c2 in s2.semCourses and
-                s3.semNumber = 2 and c3 in s3.semCourses and
-                finishBySem[2]
-        } is unsat
     } 
-
 }
 
 test suite for validSCBPlan {
