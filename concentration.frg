@@ -21,6 +21,8 @@ abstract sig coursesSet {
 }
 
 one sig foundationCourses extends coursesSet {}
+one sig usedAdditionalCourses extends coursesSet {}
+one sig usedThousandLevelCourses extends coursesSet {}
 one sig fallCourses extends coursesSet {}
 one sig springCourses extends coursesSet {}
 one sig capstoneCourses extends coursesSet {}
@@ -370,12 +372,18 @@ pred noEquivalentTaken {
 
 pred atLeastSomeThousandLevel[numThousandLevel: Int] {
     // must take the indicated number of thousand-level courses
-    #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in thousandLevelCourses.setCourses and course not in foundationCourses.setCourses} >= numThousandLevel
+    #{sem: SemesterSchedule, course: Course | 
+        course in sem.semCourses and course in thousandLevelCourses.setCourses and course not in foundationCourses.setCourses
+        and course in usedThousandLevelCourses.setCourses and course not in usedAdditionalCourses.setCourses
+    } >= numThousandLevel
 }
 
 pred someAdditionalCourses[numAdditional: Int] {
     // must take the indicated number of additional courses
-    #{sem: SemesterSchedule, course: Course | course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses} >= numAdditional
+    #{sem: SemesterSchedule, course: Course | 
+        course in sem.semCourses and course in additionalCourses.setCourses and course not in foundationCourses.setCourses and
+        course in usedAdditionalCourses.setCourses and course not in usedThousandLevelCourses.setCourses
+    } >= numAdditional
 }
 
 pred fulfillsCalcRequirement[isAB: Int, hasHSCredit: Int] {
