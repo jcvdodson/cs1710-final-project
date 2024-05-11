@@ -102,6 +102,13 @@ test suite for fulfillsIntroSequence {
             fulfillsAllCoursePrereqs
             fulfillsIntroSequence
         } is sat
+
+        validIntroHas19 : {
+            {some sem1: SemesterSchedule | cs0190 in sem1.semCourses}
+            establishPrerequisites
+            fulfillsAllCoursePrereqs
+            fulfillsIntroSequence
+        } is sat
     }
 }
 
